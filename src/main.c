@@ -13,14 +13,16 @@ int main()
 {
     GLFWwindow* window = NULL;
     if (init_window(1280, 720, "COMP 565 - Assignment 1", &window)) {
-        return -1;
+        glfwTerminate();
+        return EXIT_FAILURE;
     }
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         fputs("Failed to initialize GLAD.\n", stderr);
-        return -1;
+        glfwTerminate();
+        return EXIT_FAILURE;
     }
 
     GLuint program = 0;
@@ -28,6 +30,7 @@ int main()
         load_shader("../resources/vertex.glsl", "../resources/fragment.glsl", &program);
 
     if (is_failure) {
+        glfwTerminate();
         return EXIT_FAILURE;
     }
 
@@ -115,7 +118,7 @@ int main()
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react
