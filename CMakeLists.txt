@@ -21,7 +21,8 @@ add_subdirectory(lib/glfw)
 add_executable(${PROJECT_NAME}
     src/io.c
     src/main.c
-    src/shader.c)
+    src/shader.c
+    src/window.c)
 target_include_directories(${PROJECT_NAME} PUBLIC
     include)
 
