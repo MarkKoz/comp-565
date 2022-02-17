@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-int load_shader(const GLchar* const source, const GLuint* const shader)
+int compile_shader(const GLchar* const source, const GLuint* const shader)
 {
     glShaderSource(*shader, 1, &source, NULL);
     glCompileShader(*shader);
@@ -41,14 +41,14 @@ int load_shader(const GLchar* const source, const GLuint* const shader)
     return -1;
 }
 
-int load_shader_file(const char* const file_path, const GLuint* const shader)
+int compile_shader_file(const char* const file_path, const GLuint* const shader)
 {
     char* file_content = NULL;
     if (read_file(file_path, &file_content)) {
         return -1;
     }
 
-    int result = load_shader(file_content, shader);
+    int result = compile_shader(file_content, shader);
     free(file_content);
 
     return result;

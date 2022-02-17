@@ -46,12 +46,12 @@ int main()
 
     // Build and compile the shaders.
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    if (load_shader_file("../resources/vertex.glsl", &vertex_shader)) {
+    if (compile_shader_file("../resources/vertex.glsl", &vertex_shader)) {
         return EXIT_FAILURE;
     }
 
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    if (load_shader_file("../resources/fragment.glsl", &fragment_shader)) {
+    if (compile_shader_file("../resources/fragment.glsl", &fragment_shader)) {
         return EXIT_FAILURE;
     }
 
