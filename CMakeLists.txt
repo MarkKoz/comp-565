@@ -19,7 +19,8 @@ add_subdirectory(lib/glad)
 add_subdirectory(lib/glfw)
 
 add_executable(${PROJECT_NAME}
-    src/main.c)
+    src/main.c
+    src/util.c)
 target_include_directories(${PROJECT_NAME} PUBLIC
     include)
 

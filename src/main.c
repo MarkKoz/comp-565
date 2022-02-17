@@ -1,4 +1,6 @@
+#include "util.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -9,33 +11,6 @@ void process_input(GLFWwindow* window);
 // settings
 const int SCR_WIDTH = 1280;
 const int SCR_HEIGHT = 720;
-
-// ========================================
-// GLSL (OpenGL Shading Language)
-// Modern OpenGL requires that we at least set up a vertex and fragment
-// shader if we want to do some rendering
-const char* const VERTEX_SHADER_SOURCE =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "layout (location = 1) in vec3 aColor;\n"
-    "out vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    "   ourColor = aColor;\n"
-    "}\0";
-
-// Fragment shader
-// The fragment shader is all about calculating the color output of your pixels.
-const char* const FRAGMENT_SHADER_SOURCE =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "in vec3 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(ourColor, 1.0f);\n"
-    "}\n\0";
-// ========================================
 
 int main()
 {
@@ -69,32 +44,19 @@ int main()
         return -1;
     }
 
-    // build and compile our shader program
-    // ------------------------------------
-    // vertex shader
+    // Build and compile the shaders.
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &VERTEX_SHADER_SOURCE, NULL);
-    glCompileShader(vertex_shader);
-    // check for shader compile errors
+    if (load_shader_file("../resources/vertex.glsl", &vertex_shader)) {
+        return EXIT_FAILURE;
+    }
+
+    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    if (load_shader_file("../resources/fragment.glsl", &fragment_shader)) {
+        return EXIT_FAILURE;
+    }
+
     int success = 0;
     char info_log[512];
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-        fputs("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n", stderr);
-        fputs(info_log, stderr);
-    }
-    // fragment shader
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &FRAGMENT_SHADER_SOURCE, NULL);
-    glCompileShader(fragment_shader);
-    // check for shader compile errors
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
-        fputs("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n", stderr);
-        fputs(info_log, stderr);
-    }
 
     // link shaders
     // A shader program object is the final linked version of multiple shaders combined.
