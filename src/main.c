@@ -45,35 +45,13 @@ int main()
         return -1;
     }
 
-    // Build and compile the shaders.
-    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    if (compile_shader_file("../resources/vertex.glsl", &vertex_shader)) {
+    GLuint program = 0;
+    int is_failure =
+        load_shader("../resources/vertex.glsl", "../resources/fragment.glsl", &program);
+
+    if (is_failure) {
         return EXIT_FAILURE;
     }
-
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    if (compile_shader_file("../resources/fragment.glsl", &fragment_shader)) {
-        return EXIT_FAILURE;
-    }
-
-    int success = 0;
-    char info_log[512];
-
-    // link shaders
-    // A shader program object is the final linked version of multiple shaders combined.
-    GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
-    glLinkProgram(shader_program);
-    // check for linking errors
-    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shader_program, 512, NULL, info_log);
-        fputs("ERROR::SHADER::PROGRAM::LINKING_FAILED\n", stderr);
-        fputs(info_log, stderr);
-    }
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // First 3 are positions; last 3 are colours.
@@ -132,7 +110,7 @@ int main()
 
     // as we only have a single shader, we could also just activate our shader once beforehand if we
     // want to
-    glUseProgram(shader_program);
+    glUseProgram(program);
 
     // render loop
     // -----------

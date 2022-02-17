@@ -8,6 +8,8 @@ int compile_shader(const GLchar* source, const GLuint* shader);
 
 int compile_shader_file(const char* file_path, const GLuint* shader);
 
-int check_shader_status(GLuint shader, GLenum status_type);
+int load_shader(const char* vertex_path, const char* fragment_path, GLuint* program_out);
+
+int check_glsl_status(GLuint object, GLenum status_type);
 
 #endif
