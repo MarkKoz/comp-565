@@ -19,8 +19,9 @@ add_subdirectory(lib/glad)
 add_subdirectory(lib/glfw)
 
 add_executable(${PROJECT_NAME}
+    src/io.c
     src/main.c
-    src/util.c)
+    src/shader.c)
 target_include_directories(${PROJECT_NAME} PUBLIC
     include)
 
