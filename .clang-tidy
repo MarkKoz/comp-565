@@ -119,7 +119,7 @@ Checks: >-
     hicpp-multiway-paths-covered,
     hicpp-no-assembler,
     hicpp-signed-bitwise,
-    llvm-header-guard,
+    -llvm-header-guard,
     llvm-include-order,
     misc-definitions-in-headers,
     misc-misplaced-const,
