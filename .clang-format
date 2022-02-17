@@ -63,11 +63,13 @@ IncludeBlocks: Regroup
 IncludeCategories:
     - Regex: '^("|<)(GLFW|glad)/'
       Priority: 2
-      SortPriority: 2
       CaseSensitive: true
-    - Regex: '.*'
+    - Regex: '<.+'
       Priority: 1
       SortPriority: 0
+    - Regex: '".+'
+      Priority: 9999
+      SortPriority: 9999
 IndentCaseBlocks: false
 IndentCaseLabels: true
 IndentExternBlock: Indent
