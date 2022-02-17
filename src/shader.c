@@ -13,33 +13,7 @@ int compile_shader(const GLchar* const source, const GLuint* const shader)
     glShaderSource(*shader, 1, &source, NULL);
     glCompileShader(*shader);
 
-    // Check for compilation errors.
-    GLint success = 0;
-    glGetShaderiv(*shader, GL_COMPILE_STATUS, &success);
-
-    if (success) {
-        return 0;
-    }
-
-    GLint info_log_length = 0;
-    glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &info_log_length);
-
-    char* info_log = malloc((size_t) info_log_length);
-    if (info_log == NULL) {
-        fputs(
-            "ERROR: Shader compilation failed; "
-            "couldn't allocate memory for log buffer.\n",
-            stderr);
-
-        return -1;
-    }
-
-    glGetShaderInfoLog(*shader, info_log_length, NULL, info_log);
-    fputs("ERROR: Shader compilation failed.\n", stderr);
-    fputs(info_log, stderr);
-    free(info_log);
-
-    return -1;
+    return check_shader_status(*shader, GL_COMPILE_STATUS);
 }
 
 int compile_shader_file(const char* const file_path, const GLuint* const shader)
@@ -53,4 +27,34 @@ int compile_shader_file(const char* const file_path, const GLuint* const shader)
     free(file_content);
 
     return result;
+}
+
+int check_shader_status(const GLuint shader, GLenum status_type)
+{
+    GLint success = 0;
+    glGetShaderiv(shader, status_type, &success);
+
+    if (success) {
+        return 0;
+    }
+
+    GLint info_log_length = 0;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
+
+    char* info_log = malloc((size_t) info_log_length);
+    if (info_log == NULL) {
+        fputs(
+            "ERROR: Shader compilation failed; "
+            "couldn't allocate memory for log buffer.\n",
+            stderr);
+
+        return -1;
+    }
+
+    glGetShaderInfoLog(shader, info_log_length, NULL, info_log);
+    fputs("ERROR: Shader compilation failed.\n", stderr);
+    fputs(info_log, stderr);
+    free(info_log);
+
+    return -1;
 }
