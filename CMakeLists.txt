@@ -68,8 +68,12 @@ else ()
         -o2)
 endif ()
 
+list(APPEND FLAGS_COMMON
+    -DGLFW_INCLUDE_NONE)
+
 target_link_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:${FLAGS_LINK_NO_CONSOLE}>")
 target_compile_options(${PROJECT_NAME} PUBLIC "${FLAGS_WARN}")
+target_compile_options(${PROJECT_NAME} PUBLIC "${FLAGS_COMMON}")
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:${FLAGS_DEBUG}>")
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:${FLAGS_RELEASE}>")
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME output)
