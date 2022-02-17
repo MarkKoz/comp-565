@@ -60,6 +60,14 @@ DisableFormat: false
 EmptyLineBeforeAccessModifier: Always
 FixNamespaceComments: true
 IncludeBlocks: Regroup
+IncludeCategories:
+    - Regex: '^("|<)(GLFW|glad)/'
+      Priority: 2
+      SortPriority: 2
+      CaseSensitive: true
+    - Regex: '.*'
+      Priority: 1
+      SortPriority: 0
 IndentCaseBlocks: false
 IndentCaseLabels: true
 IndentExternBlock: Indent
