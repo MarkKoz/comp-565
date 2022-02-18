@@ -1,5 +1,7 @@
 #include "vertex.h"
 
+#include <string.h>
+
 #include <glad/glad.h>
 
 void init_tri_vertex_attr(
@@ -42,6 +44,9 @@ void update_vertex_colour(GLintptr vertex_index, float red, float green, float b
 {
     const float colour[] = {red, green, blue};
     const GLintptr offset = ((6 * vertex_index) + 3) * (GLintptr) sizeof(float);
+    const GLsizeiptr size = 3 * sizeof(float);
 
-    glBufferSubData(GL_ARRAY_BUFFER, offset, 3 * sizeof(float), colour);
+    void* buffer = glMapBufferRange(GL_ARRAY_BUFFER, offset, size, GL_MAP_WRITE_BIT);
+    memcpy(buffer, colour, size);
+    glUnmapBuffer(GL_ARRAY_BUFFER);
 }
