@@ -62,7 +62,8 @@ mkdir -p cmake-build-release
 cd cmake-build-release
 cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config Release
+cmake --install . --prefix ../install/
 ```
 
 ### Executing
-The output binary is named `output` or `output.exe` on Windows. With GCC, the binary will be in `cmake-build-release/output`. With MSVC, it will be in `cmake-build-release/Release/output.exe`.
+The output binary is named `output`. It is located the `bin` directory inside the directory used as the install prefix. Thus, for `--prefix ../install/`, the binary's path is `../install/bin/output`. On Windows, it has the `.exe` suffix.

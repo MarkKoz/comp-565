@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 project(cs_565_01 C)
 
 set(CMAKE_C_STANDARD 11)
@@ -81,3 +81,6 @@ target_compile_options(${PROJECT_NAME} PUBLIC "${FLAGS_COMMON}")
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:${FLAGS_DEBUG}>")
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:${FLAGS_RELEASE}>")
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME output)
+
+install(TARGETS ${PROJECT_NAME} RUNTIME)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/resources/ DESTINATION resources)
