@@ -50,7 +50,9 @@ int main()
         process_input(window);
 
         // Render the triangle.
+        // Bind the VAO so the set-up vertex attributes get used.
         glBindVertexArray(vao);
+        // Draw a triangle using 3 vertices, starting at the 1st vertex.
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
