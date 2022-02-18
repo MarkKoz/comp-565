@@ -1,0 +1,77 @@
+% !TEX output_directory = ./.temp/report
+% !TEX options = --shell-escape
+
+\documentclass[a4paper, 12pt]{scrartcl}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% Syntax highlighting.
+\usepackage[outputdir=./.temp/report]{minted}
+
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    bookmarksnumbered,
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black},
+}
+
+\usepackage{bookmark}
+
+% Remove space reserved for unused fields.
+% https://tex.stackexchange.com/a/134857
+\makeatletter
+\renewcommand{\@maketitle}{\null\vskip 2em
+\begin{center}
+  \ifx\@subject\@empty \else
+    {\subject@font \@subject \par}
+    \vskip 1.5em
+  \fi
+  \titlefont\huge \@title\par
+  \vskip .5em
+  {\ifx\@subtitle\@empty\else\usekomafont{subtitle}\@subtitle\par\fi}%
+\end{center}
+\vskip 2em}
+\makeatother
+
+\title{OpenGL Basics}
+\subject{COMP 565 - Advanced Computer Graphics}
+\subtitle{Assignment 1}
+\date{}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section{Objectives}
+
+\section{OpenGL}
+\subsection{Graphics Pipeline}
+\subsubsection{Vertex Shader}
+
+\subsubsection{Shape Assembly}
+
+\subsubsection{Geometry Shader}
+
+\subsubsection{Rasterisation}
+
+\subsubsection{Fragment Shader}
+
+\subsubsection{Tests and Blending}
+
+\subsection{Vertex Inputs}
+
+\subsection{Shaders}
+
+\subsection{Shader Program}
+
+\section{Conclusions}
+\subsection{Challenges}
+
+\subsection{Learning Outcomes}
+
+\end{document}
