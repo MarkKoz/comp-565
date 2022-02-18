@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME}
     src/io.c
     src/main.c
     src/shader.c
+    src/vertex.c
     src/window.c)
 target_include_directories(${PROJECT_NAME} PUBLIC
     include)
