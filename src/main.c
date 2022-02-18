@@ -51,6 +51,10 @@ int main()
     while (!glfwWindowShouldClose(window)) {
         process_input(window);
 
+        // Set the background colour.
+        glClearColor(0.2F, 0.3F, 0.3F, 1.0F);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         // Alternate between 0 and 1 for a single colour component of each vertex.
         float colour = (float) (sin(glfwGetTime()) / 2.0 + 0.5);
         update_vertex_colour(0, colour, 0, 0);
