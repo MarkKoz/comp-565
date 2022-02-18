@@ -82,7 +82,9 @@ Though the fragment shader sets the colour of a fragment, the final stage can st
 
 \section{Conclusions}
 \subsection{Challenges}
+The main challenge was getting the vertex colours to update every frame. The assigned reading didn't really explain how to do this practically. The uniforms approach shown does not scale up because it cannot specify a different value depending on the input vertex. Thus, I had to research on my own how to update vertices. I naïvely attempted to write to the original vertices array, but quickly discovered that does not work. Therefore, I figured I had to update the vertex buffer object instead. I successfully achieved this with the \texttt{glBufferSubData} function, but ultimately settled on an alternative approach, the \texttt{glMapBufferRange} function.
 
 \subsection{Learning Outcomes}
+I learned about the OpenGL graphics pipeline; I went from zero knowledge to having a high-level overview of OpenGL. I learned the basics of shaders: GLSL, inputs, outputs, uniforms, compilation, linking, and shader programs. I also learned about vertices: vertex attributes, vertex buffer objects, vertex array objects, and element buffers objects. Finally, I learned how to update buffers using the two functions described in the previous section.
 
 \end{document}
