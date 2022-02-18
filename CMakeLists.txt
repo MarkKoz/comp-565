@@ -69,7 +69,7 @@ else ()
         -ggdb)
     list(APPEND FLAGS_RELEASE
         -DNDEBUG
-        -o2)
+        -O2)
 endif ()
 
 list(APPEND FLAGS_COMMON
