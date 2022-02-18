@@ -48,20 +48,31 @@
 \maketitle
 
 \section{Objectives}
+The objective is to render a triangle which demonstrates fragment interpolation. This means a fragment's colour is a combination of the three vertices' colours. Its position relative to a vertex determines how much that of vertex's colour is present in the fragment's colour.
+
+Initially, the first vertex is red, the second green, and the third blue. The vertex colours need to be updated every frame so that they smoothly transition to black and then back to their original colours. Because the vertex colours change, the results of fragment interpolation should also be affected.
 
 \section{OpenGL}
 \subsection{Graphics Pipeline}
-\subsubsection{Vertex Shader}
+The graphics pipeline in OpenGL ultimately transforms 3D coordinates into coloured 2D pixels. The pipeline can be split into two main sections: transforming 3D coordinates to 2D coordinates, and transforming 2D coordinates to coloured pixels. The pipeline has six stages which are described below.
 
-\subsubsection{Shape Assembly}
+\paragraph{Vertex Shader}
+The vertex shader is the first stop in the graphics pipeline. The shader receives a single vertex as an input and generates a single vertex as an output. It may transform 3D coordinates into other 3D coordinates if desired. It can also modify other arbitrary attributes of the vertex (such as colour).
 
-\subsubsection{Geometry Shader}
+\paragraph{Primitive Assembly}
+OpenGL has \textit{primitives}, which are different ways to interpret a set of vertices. For example, the vertices can be interpreted as a triangle or a line. The primitive assembly stage converts the vertices into primitives. Essentially it forms some shape from the vertices.
 
-\subsubsection{Rasterisation}
+\paragraph{Geometry Shader}
+Once a primitive is formed, the geometry shader can be used to form new primitives based on the given vertices for a primitive formed by primitive assembly.
 
-\subsubsection{Fragment Shader}
+\paragraph{Rasterisation}
+The rasterisation stage converts primitives into pixels that will be rendered on the screen. This results in \textit{fragments}, which are objects representing pixel data for OpenGL. This stage also performs clipping to remove fragments that will not be visible on screen.
 
-\subsubsection{Tests and Blending}
+\paragraph{Fragment Shader}
+The fragment shader takes a single fragment as an output and produces a single fragment as an output. The shader can modify the fragment's colour.
+
+\paragraph{Tests and Blending}
+Though the fragment shader sets the colour of a fragment, the final stage can still affect the final colour of fragments. This stage blends fragments together depending on their alpha values, which determine their opacity. It checks the depth of fragments to determine their positions relative to other fragments (behind or in front), discarding fragments if needed.
 
 \subsection{Vertex Inputs}
 
