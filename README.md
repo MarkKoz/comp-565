@@ -37,3 +37,32 @@ You will need to have a write-up for the homework, describing the problem and th
 
 ## Submission
 Report and code.
+
+## Building from Source
+
+### Prerequisites
+First, ensure a C compiler and CMake are installed and available on your `PATH`. GCC 11.2 and MSVC from VS 2022 have been tested. Clang will probably work too.
+
+### Obtaining the Source Code
+Clone the repository with Git along with submodules.
+```shell
+git clone --depth 1 git@github.com:MarkKoz/comp-565.git
+cd comp-565
+git submodule init
+git submodule update --depth 1
+```
+
+Alternatively, extract an archive of the repository and submodules.
+
+### Building
+Once all the source files are present in a directory, `cd` into the directory and use CMake to build.
+
+```shell
+mkdir -p cmake-build-release
+cd cmake-build-release
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release
+```
+
+### Executing
+The output binary is named `output` or `output.exe` on Windows. With GCC, the binary will be in `cmake-build-release/output`. With MSVC, it will be in `cmake-build-release/Release/output.exe`.
