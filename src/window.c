@@ -41,3 +41,10 @@ void framebuffer_size_callback(GLFWwindow* const window, const int width, const 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
+
+void process_input(GLFWwindow* const window)
+{
+    // Close the window if the ESC key is pressed.
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, 1);
+}

@@ -17,8 +17,6 @@ const float VERTICES[] = {
 };
 // clang-format on
 
-void process_input(GLFWwindow* window);
-
 int main()
 {
     GLFWwindow* window = NULL;
@@ -65,11 +63,4 @@ int main()
 
     glfwTerminate();
     return EXIT_SUCCESS;
-}
-
-void process_input(GLFWwindow* const window)
-{
-    // Close the window if the ESC key is pressed.
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, 1);
 }
