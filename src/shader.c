@@ -34,11 +34,14 @@ int load_shader(
     // Compile shaders.
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     if (compile_shader_file(vertex_path, &vertex_shader)) {
+        glDeleteShader(vertex_shader);
         return -1;
     }
 
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     if (compile_shader_file(fragment_path, &fragment_shader)) {
+        glDeleteShader(vertex_shader);
+        glDeleteShader(fragment_shader);
         return -1;
     }
 
@@ -49,12 +52,12 @@ int load_shader(
     glAttachShader(program, fragment_shader);
     glLinkProgram(program);
 
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
+
     if (check_glsl_status(program, GL_LINK_STATUS)) {
         return -1;
     }
-
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
 
     *program_out = program;
 
