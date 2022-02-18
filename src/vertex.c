@@ -14,7 +14,7 @@ void init_tri_vertex_attr(
     glBindBuffer(GL_ARRAY_BUFFER, *vbo);
 
     // Copy the vertex data to the VBO.
-    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STREAM_DRAW);
 
     // Position attribute:
     // The attribute's location is 0.
@@ -36,4 +36,12 @@ void init_tri_vertex_attr(
     // Unbind the VAO so other VAO calls won't accidentally modify this one.
     // This isn't strictly necessary in this case.
     glBindVertexArray(0);
+}
+
+void update_vertex_colour(GLintptr vertex_index, float red, float green, float blue)
+{
+    const float colour[] = {red, green, blue};
+    const GLintptr offset = ((6 * vertex_index) + 3) * (GLintptr) sizeof(float);
+
+    glBufferSubData(GL_ARRAY_BUFFER, offset, 3 * sizeof(float), colour);
 }

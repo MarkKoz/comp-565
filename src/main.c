@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -44,14 +45,18 @@ int main()
     init_tri_vertex_attr(&vao, &vbo, VERTICES, sizeof(VERTICES));
 
     glUseProgram(program);
+    glBindVertexArray(vao); // Bind the VAO so the set-up vertex attributes get used.
 
     // Render loop.
     while (!glfwWindowShouldClose(window)) {
         process_input(window);
 
-        // Render the triangle.
-        // Bind the VAO so the set-up vertex attributes get used.
-        glBindVertexArray(vao);
+        // Alternate between 0 and 1 for a single colour component of each vertex.
+        float colour = (float) (sin(glfwGetTime()) / 2.0 + 0.5);
+        update_vertex_colour(0, colour, 0, 0);
+        update_vertex_colour(1, 0, colour, 0);
+        update_vertex_colour(2, 0, 0, colour);
+
         // Draw a triangle using 3 vertices, starting at the 1st vertex.
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
