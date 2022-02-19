@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -47,6 +46,13 @@ int main()
     glUseProgram(program);
     glBindVertexArray(vao); // Bind the VAO so the set-up vertex attributes get used.
 
+    int time_uniform = glGetUniformLocation(program, "time");
+    if (time_uniform == -1) {
+        fputs("Failed to fine time uniform.\n", stderr);
+        glfwTerminate();
+        return EXIT_FAILURE;
+    }
+
     // Render loop.
     while (!glfwWindowShouldClose(window)) {
         process_input(window);
@@ -55,11 +61,7 @@ int main()
         glClearColor(0.2F, 0.3F, 0.3F, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Alternate between 0 and 1 for a single colour component of each vertex.
-        float colour = (float) (sin(glfwGetTime()) / 2.0 + 0.5);
-        update_vertex_colour(0, colour, 0, 0);
-        update_vertex_colour(1, 0, colour, 0);
-        update_vertex_colour(2, 0, 0, colour);
+        glUniform1f(time_uniform, (float) glfwGetTime());
 
         // Draw a triangle using 3 vertices, starting at the 1st vertex.
         glDrawArrays(GL_TRIANGLES, 0, 3);

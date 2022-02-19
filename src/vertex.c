@@ -1,7 +1,5 @@
 #include "vertex.h"
 
-#include <string.h>
-
 #include <glad/glad.h>
 
 void init_tri_vertex_attr(
@@ -38,15 +36,4 @@ void init_tri_vertex_attr(
     // Unbind the VAO so other VAO calls won't accidentally modify this one.
     // This isn't strictly necessary in this case.
     glBindVertexArray(0);
-}
-
-void update_vertex_colour(GLintptr vertex_index, float red, float green, float blue)
-{
-    const float colour[] = {red, green, blue};
-    const GLintptr offset = ((6 * vertex_index) + 3) * (GLintptr) sizeof(float);
-    const GLsizeiptr size = 3 * sizeof(float);
-
-    void* buffer = glMapBufferRange(GL_ARRAY_BUFFER, offset, size, GL_MAP_WRITE_BIT);
-    memcpy(buffer, colour, size);
-    glUnmapBuffer(GL_ARRAY_BUFFER);
 }
