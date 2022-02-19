@@ -100,6 +100,12 @@ The fragment shader controls the colour of the pixels. For this assignment, the 
 \subsection{Shader Program}
 Shaders first have to be compiled. Once compiled, shaders have to be linked so that the outputs of one shader can be used as inputs for the other. The result of linkage is the \textit{shader program}. The \texttt{glUseProgram} function has to be called in order to use the resulting program, which in turn tells OpenGL which shaders it should be using.
 
+\subsection{Vertex Array Object}
+A \textit{vertex array object} (VAO) is useful for saving configurations for vertex attributes and buffers. When a VAO is bound, the aforementioned configurations will be tracked by the VAO so that the VAO can be re-used at a later point and restore those configurations for OpenGL. It becomes especially useful when needing to use different sets of configurations. Similar to a shader program, binding the VAO (via \texttt{glBindVertexArray}) will tell OpenGL which configuration to use while rendering.
+
+\subsection{Drawing}
+Once a program is active and a VAO is bound, OpenGL is ready to draw the vertices. This can be done with the \texttt{glDrawArrays} function. It has to be given the type of primitive to draw. In this case, a triangle, so \texttt{GL\_TRIANGLES}. It also needs to know the amount of vertices (3) and the starting index of the vertex array (0).
+
 \section{Conclusions}
 \subsection{Challenges}
 The main challenge was getting the vertex colours to update every frame. The assigned reading didn't really explain how to do this practically. The uniforms approach shown does not scale up because it cannot specify a different value depending on the input vertex. Thus, I had to research on my own how to update vertices. I naïvely attempted to write to the original vertices array, but quickly discovered that does not work. Therefore, I figured I had to update the vertex buffer object instead. I successfully achieved this with the \texttt{glBufferSubData} function, but ultimately settled on an alternative approach, the \texttt{glMapBufferRange} function.
