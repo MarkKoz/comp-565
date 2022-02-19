@@ -75,10 +75,30 @@ The fragment shader takes a single fragment as an output and produces a single f
 Though the fragment shader sets the colour of a fragment, the final stage can still affect the final colour of fragments. This stage blends fragments together depending on their alpha values, which determine their opacity. It checks the depth of fragments to determine their positions relative to other fragments (behind or in front), discarding fragments if needed.
 
 \subsection{Vertex Inputs}
+Vertex coordinates are expected to be 3D. OpenGL processes \textit{normalised device coordinates} (NDC), which are coordinates in the range $[-1,1]$. In this coordinate system, the origin is $(0,0,0)$. Positive $y$ points up, positive $x$ points right, and $z$ determines the depth.
+
+\textit{Vertex buffer objects} (VBO) are used to stored vertices in the GPU's memory. There are different ways in which the GPU can manage this data. For this assignment's objective, the vertex data needs to be updated every frame. Hence, \texttt{GL\_STREAM\_DRAW} is the ideal option for managing the vertex data. The can be created with \texttt{glGenBuffers}, bound with \texttt{glBindBuffer} (so that the \texttt{GL\_ARRAY\_BUFFER} target refers to this buffer), and populated with \texttt{glBufferData}.
+
+\subsubsection{Attributes}
+The vertex data can be in any arbitrary format, as long as the shader will be told how to interpret the data. For this assignment, each vertex consists of six values: the first three are the position coordinates, and the last 3 are the RGB values for that vertex's colour. The position and the colour are known as \textit{vertex attributes}. In this case, both are 3D vectors, or \texttt{vec3}s.
+
+The way in which attributes are interpreted is defined using the \texttt{glVertexAttribPointer} function. It specifies the attribute's size, its values' data type, its starting offset in the vertex buffer, and its stride (space between consecutive attributes).
 
 \subsection{Shaders}
+Shaders are small programs that run on the GPU and are used to process data within the graphics pipeline. They are written using GLSL, the OpenGL Shading Language, which resembles C. The overview of the graphics pipeline mentioned three shaders: vertex shaders, geometry shaders, and fragment shaders. OpenGL requires at least a vertex shader and a fragment shader; there are no defaults for these two.
+
+As mentioned earlier, shaders have inputs and outputs. These need to be defined by the shaders. An output from one shader can be used as an input for a shader in a subsequent stage of the pipeline.
+
+\paragraph{Vertex Shader}
+The vertex shader takes a single vertex as an input and outputs a single vertex. For this assignment, the vertices have two attributes: position and colour. The shader sets the output position by assigning it to the predefined \texttt{gl\_Position} variable. However, this expects a \texttt{vec4}. Hence, the input position must be converted from \texttt{vec3}. To do this, the three input components are copied, and the $w$ component, which is used for perspective division, is set to $1.0$.
+
+As for the colour, the shader simply outputs the colour as given. This will later be used by the fragment shader.
+
+\paragraph{Fragment Shader}
+The fragment shader controls the colour of the pixels. For this assignment, the shader takes as an input the colour that was output by the vertex shader. The fragment shader does modify the colour, but it does need to convert it to a \texttt{vec4}, since that is the expected output format. The fourth component is the alpha channel, which determined the opacity. In this case, all fragments are fully opaque, so the alpha is set to $1.0$.
 
 \subsection{Shader Program}
+Shaders first have to be compiled. Once compiled, shaders have to be linked so that the outputs of one shader can be used as inputs for the other. The result of linkage is the \textit{shader program}. The \texttt{glUseProgram} function has to be called in order to use the resulting program, which in turn tells OpenGL which shaders it should be using.
 
 \section{Conclusions}
 \subsection{Challenges}
