@@ -78,12 +78,12 @@ Shaders are small programs that run on the GPU and are used to process data with
 
 As mentioned earlier, shaders have inputs and outputs. These need to be defined by the shaders. An output from one shader can be used as an input for a shader in a subsequent stage of the pipeline.
 
-\paragraph{Vertex Shader}
+\subsubsection{Vertex Shader}
 The vertex shader takes a single vertex as an input and outputs a single vertex. For this assignment, the vertices have two attributes: position and colour. The shader sets the output position by assigning it to the predefined \texttt{gl\_Position} variable. However, this expects a \texttt{vec4}. Hence, the input position must be converted from \texttt{vec3}. To do this, the three input components are copied, and the $w$ component, which is used for perspective division, is set to $1.0$.
 
 As for the colour, the shader simply outputs the colour as given. This will later be used by the fragment shader.
 
-\paragraph{Fragment Shader}
+\subsubsection{Fragment Shader}
 The fragment shader controls the colour of the pixels. For this assignment, the shader takes as an input the colour that was output by the vertex shader. The fragment shader does modify the colour, but it does need to convert it to a \texttt{vec4}, since that is the expected output format. The fourth component is the alpha channel, which determined the opacity. In this case, all fragments are fully opaque, so the alpha is set to $1.0$.
 
 \subsection{Shader Program}
