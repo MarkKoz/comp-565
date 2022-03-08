@@ -36,10 +36,11 @@ public class CubeManager : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        if (Input.GetMouseButtonDown(0)) CreateCubeOnHit();
+        if (Input.GetMouseButtonDown(0)) CreatePrimitiveOnHit();
+        else if (Input.GetMouseButtonDown(1)) DestroyPrimitiveOnHit();
     }
 
-    private void CreateCubeOnHit()
+    private void CreatePrimitiveOnHit()
     {
         bool hit = Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo);
 
@@ -49,6 +50,15 @@ public class CubeManager : MonoBehaviour
             CreatePrimitive(new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z));
         else
             CreatePrimitive(hitInfo.transform.position + hitInfo.normal);
+    }
+
+    private void DestroyPrimitiveOnHit()
+    {
+        bool hit = Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo);
+
+        if (!hit || hitInfo.transform.tag.Equals("Base")) return;
+
+        Destroy(hitInfo.transform.gameObject);
     }
 
     private void CreatePrimitive(Vector3 position)
