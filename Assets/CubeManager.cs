@@ -58,7 +58,7 @@ public class CubeManager : MonoBehaviour
         {
             if (!hitInfo.transform.tag.Equals("Base"))
             {
-                var explosion = hitInfo.transform.GetComponent<TriangleExplosion>();
+                var explosion = hitInfo.transform.GetComponentInParent<TriangleExplosion>();
                 StartCoroutine(explosion.SplitMesh(true));
             }
         }
@@ -89,19 +89,34 @@ public class CubeManager : MonoBehaviour
     {
         var position = GetNewPosition(hitInfo);
 
-        if (!IsColliding(position))
+        if (IsColliding(position))
+            return;
+
+        var primitive = GameObject.CreatePrimitive(ui.primitive);
+        primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
+        primitive.transform.position = position;
+        primitive.layer = 3;
+        primitive.AddComponent<TriangleExplosion>();
+
+        // Create a box collider for non-cube primitives.
+        if (!(ui.primitive is PrimitiveType.Cube))
         {
-            var primitive = GameObject.CreatePrimitive(ui.primitive);
-            primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
-            primitive.transform.position = position;
-            primitive.layer = 3;
-            primitive.AddComponent<TriangleExplosion>();
+            var child = AddChildBoxCollider(primitive);
+
+            // Create a second collider for capsules, since they're 2x in height.
+            if (ui.primitive is PrimitiveType.Capsule)
+            {
+                child.transform.localPosition = Vector3.down / 2;
+                var child2 = AddChildBoxCollider(primitive);
+                child2.transform.localPosition = Vector3.up / 2;
+            }
         }
     }
 
     private Vector3 GetNewPosition(RaycastHit hitInfo)
     {
         Vector3 pos;
+
         if (hitInfo.transform.tag.Equals("Base"))
         {
             if (ui.primitive is PrimitiveType.Capsule)
@@ -111,14 +126,11 @@ public class CubeManager : MonoBehaviour
         }
         else
         {
-            pos = hitInfo.transform.position + hitInfo.normal;
+            // Important that the collider's transform is used.
+            pos = hitInfo.collider.transform.position + hitInfo.normal;
+
             if (ui.primitive is PrimitiveType.Capsule)
-            {
-                if (hitInfo.normal == Vector3.down)
-                    pos.y -= 0.5f;
-                else
-                    pos.y += 0.5f;
-            }
+                pos.y += 0.5f;
         }
 
         return pos;
@@ -139,5 +151,19 @@ public class CubeManager : MonoBehaviour
                 layerMask),
             _ => Physics.CheckBox(position, Vector3.one * radius, Quaternion.identity, layerMask)
         };
+    }
+
+    private static GameObject AddChildBoxCollider(GameObject parent)
+    {
+        var child = new GameObject();
+        child.name = "BoxCollider";
+        child.transform.parent = parent.transform;
+        child.transform.localPosition = Vector3.zero;
+        child.layer = 6;
+
+        var boxCollider = child.AddComponent<BoxCollider>();
+        boxCollider.size = Vector3.one;
+
+        return child;
     }
 }
