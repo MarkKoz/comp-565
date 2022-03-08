@@ -95,12 +95,29 @@ public class CubeManager : MonoBehaviour
         }
     }
 
-    private static Vector3 GetNewPosition(RaycastHit hitInfo)
+    private Vector3 GetNewPosition(RaycastHit hitInfo)
     {
+        Vector3 pos;
         if (hitInfo.transform.tag.Equals("Base"))
-            return new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z);
+        {
+            if (ui.primitive is PrimitiveType.Capsule)
+                pos = hitInfo.point + Vector3.up;
+            else
+                pos = hitInfo.point + (Vector3.up / 2);
+        }
+        else
+        {
+            pos = hitInfo.transform.position + hitInfo.normal;
+            if (ui.primitive is PrimitiveType.Capsule)
+            {
+                if (hitInfo.normal == Vector3.down)
+                    pos.y -= 0.5f;
+                else
+                    pos.y += 0.5f;
+            }
+        }
 
-        return hitInfo.transform.position + hitInfo.normal;
+        return pos;
     }
 
     private bool IsColliding(Vector3 position)
