@@ -72,8 +72,7 @@ public class CubeManager : MonoBehaviour
         var colour = hitInfo.transform.tag.Equals("Base") ? Color.yellow : Color.green;
         colour.a = 0.5f;
         newGuide.GetComponent<MeshRenderer>().material.color = colour;
-
-        SetPosition(newGuide, hitInfo);
+        newGuide.transform.position = GetNewPosition(hitInfo);
 
         activeGuide.SetActive(false);
         activeGuide = newGuide;
@@ -82,16 +81,39 @@ public class CubeManager : MonoBehaviour
 
     private void CreatePrimitive(RaycastHit hitInfo)
     {
-        var primitive = GameObject.CreatePrimitive(ui.primitive);
-        primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
-        SetPosition(primitive, hitInfo);
+        var position = GetNewPosition(hitInfo);
+
+        if (!IsColliding(position))
+        {
+            var primitive = GameObject.CreatePrimitive(ui.primitive);
+            primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
+            primitive.transform.position = position;
+            primitive.layer = 3;
+        }
     }
 
-    private static void SetPosition(GameObject obj, RaycastHit hitInfo)
+    private static Vector3 GetNewPosition(RaycastHit hitInfo)
     {
         if (hitInfo.transform.tag.Equals("Base"))
-            obj.transform.position = new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z);
-        else
-            obj.transform.position = hitInfo.transform.position + hitInfo.normal;
+            return new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z);
+
+        return hitInfo.transform.position + hitInfo.normal;
+    }
+
+    private bool IsColliding(Vector3 position)
+    {
+        float radius = 0.5f - Physics.defaultContactOffset;
+        const int layerMask = 1 << 3;
+
+        return ui.primitive switch
+        {
+            PrimitiveType.Sphere => Physics.CheckSphere(position, radius, layerMask),
+            PrimitiveType.Capsule => Physics.CheckCapsule(
+                position + (Vector3.up / 2),
+                position + (Vector3.down / 2),
+                radius,
+                layerMask),
+            _ => Physics.CheckBox(position, Vector3.one * radius, Quaternion.identity, layerMask)
+        };
     }
 }
