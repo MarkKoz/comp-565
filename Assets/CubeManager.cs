@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 using UnityEngine;
 
 public class CubeManager : MonoBehaviour
 {
     public UIManager ui;
 
-    [CanBeNull] private Camera mainCamera;
+    private Camera mainCamera;
     private IReadOnlyDictionary<UIManager.Texture, Material> materials;
 
     private void Start()
@@ -40,7 +38,7 @@ public class CubeManager : MonoBehaviour
 
     private void CreateCubeOnHit()
     {
-        bool hit = Physics.Raycast(mainCamera!.ScreenPointToRay(Input.mousePosition), out var hitInfo);
+        bool hit = Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo);
 
         if (!hit) return;
 
