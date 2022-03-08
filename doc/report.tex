@@ -80,6 +80,11 @@ Each available texture for the primitive has a corresponding material. The \text
 A primitive is created by passing \texttt{UIManager.primitive} to \texttt{GameObject.CreatePrimitive}. Next, the material is retrieved from the dictionary using \texttt{UIManager.texture} as the key. It is then set on the new object by assigning it to the \texttt{material} field of the object's \texttt{MeshRenderer} component.
 
 \subsection{Placement Guide}
+When the mouse is hovered over the base or a placed object, a visual guide for placement is shown. This guide has the same shape as the currently selected primitive type, but it's texture is simply a translucent colour. It's green if the placed object will align with an existing object, yellow if it doesn't align, and red if it collides with an existing object.
+
+When a ray is cast, but neither the left nor the right mouse buttons were clicked, \texttt{ShowGuide} is called to display the visual guide. There \texttt{CubeManager} has three children, one for each primitive. The guide is shown by activating and deactivating these child primitives. These primitives are stored in a dictionary when the \texttt{CubeManager} is initialised. Furthermore, the \texttt{CubeManager} keeps track of the active object in a private field.
+
+\texttt{ShowGuide} first gets the primitive from the dictionary using \texttt{UIManager.primitive} as a key. Next, it sets its position to what \texttt{GetNewPosition} returns. Then, it sets the colour for the primitive's material; if \texttt{IsColliding} is \texttt{true}, then the colour is set to red. Finally, it deactivates the active primitive, saves the new primitive as the active one, and then activates it.
 
 \subsection{Primitive Destruction}
 
