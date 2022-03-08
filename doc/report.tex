@@ -94,7 +94,11 @@ The \texttt{TriangleExplosion} is modified to change the layer of the created tr
 The script component is retrieved using \texttt{GetComponentInParent}, which looks in either the current object or its parent. Recall that \texttt{RaycastHit.transform} returns the transform of the collider, which won't necessarily be the object that has the explosion script; spheres and capsules having children for colliders, which don't have the script component.
 
 \section{Challenges}
+It was challenging to figure out how to align to spheres and capsules as if they were cubes. It was especially difficult for capsules, since they need 2 collider children. A subtle error I made was to offset the colliders rather than offsetting their transforms, which caused a lot of confusion. The child collider approach was not even evident at first, so at first there was a lot of bespoke logic for handling position calculations for capsules (which didn't even work).
+
+It was also unclear how to trigger the explosion script, but I eventually came across a tip to use \texttt{StartCoroutine}.
 
 \section{Lessons Learned}
+There were three big learning outcomes for me: general familiarisation with the Unity Editor, Unity's collision system, and Unity's UI system. I feel more comfortable with basic tasks like creating objects and using the inspector. I do not take this for granted since I struggled with it the first couple of days I used the Unity Editor. I learned about various collider components, compound colliders, and physics functions for checking collision. Finally, I learned how to make basic UI layouts with layout groups and anchors.
 
 \end{document}
