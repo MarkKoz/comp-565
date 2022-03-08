@@ -7,6 +7,7 @@ using UnityEngine;
 public class CubeManager : MonoBehaviour
 {
     [CanBeNull] private Camera mainCamera;
+    public UIManager ui;
 
     private void Start()
     {

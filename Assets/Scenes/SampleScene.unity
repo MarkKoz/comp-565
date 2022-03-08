@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 474795}
   - component: {fileID: 474797}
   m_Layer: 0
-  m_Name: ShapePanel
+  m_Name: PrimitivePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,7 +309,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 64509963}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721689844}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnPrimitiveClick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &64509963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,6 +586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52bf1cfc05cadf4fb1feb518ada8b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ui: {fileID: 1721689844}
 --- !u!4 &273136415
 Transform:
   m_ObjectHideFlags: 0
@@ -669,7 +682,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 484075671}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721689844}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnPrimitiveClick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &484075671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,7 +1095,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1415325298}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721689844}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnTextureClick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1415325298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1190,7 +1227,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1564070582}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721689844}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnPrimitiveClick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1564070582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1304,6 +1353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1721689843}
+  - component: {fileID: 1721689844}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -1326,6 +1376,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721689844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721689842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b570e37b7f6e44fbabb5ae77330e2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  texture: 0
+  primitive: 3
 --- !u!1 &1746256379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1407,7 +1471,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1746256382}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721689844}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnTextureClick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1746256382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1527,7 +1603,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1947249574}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721689844}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: OnTextureClick
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1947249574
 MonoBehaviour:
   m_ObjectHideFlags: 0
