@@ -39,6 +39,22 @@
 \section{Introduction}
 
 \section{Approach}
+\subsection{User Interface}
+The user interface needs to allow the user to select the new primitive's texture and type. There are three choices for each. The UI is divided into two distinct parts: a panel along the left edge for the type buttons, and a panel along the bottom edge for the texture selection.
+
+The two panels are children of the same canvas, which itself is a child of a \textit{UI} object. This object is for organisational purposes and for housing the script component for handling UI interactions.
+
+Each panel has 3 buttons, which display the appropriate provided texture. The type of these textures has to be changed to \textit{Sprite} in order to use them in the UI. The panels have a vertical/horizontal layout group component to evenly space the buttons within the panels. Anchor presets are used to align the panels to the middle left or centre bottom.
+
+Each button has its \texttt{OnClick} handled by the script component in the \textit{UI} object mentioned earlier. The texture buttons use \texttt{UIManager.OnTextureClick} and the primitive type buttons use \texttt{UIManager.OnPrimitiveClick}. From the inspector, an argument is passed to these functions, which is an integer that corresponds to the \texttt{Enum}s \texttt{UIManager.Texture} and \texttt{PrimitiveType}, respectively.
+
+Upon a button being clicked, the appropriate handler is called. It converts the integer argument to the corresponding enum and stores the enum in the public field \texttt{UIManager.texture} or \texttt{UIManager.primitive}.
+
+\subsection{Primitive Creation}
+
+\subsection{Placement Guide}
+
+\subsection{Primitive Destruction}
 
 \section{Challenges}
 
