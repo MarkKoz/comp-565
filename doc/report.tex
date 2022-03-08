@@ -1,0 +1,47 @@
+% !TEX output_directory = ./.temp/report
+% !TEX options = --shell-escape
+
+\documentclass[a4paper, 12pt]{scrartcl}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{hyperref}
+\hypersetup{bookmarksnumbered}
+\usepackage{bookmark}
+
+% Remove space reserved for unused fields.
+% https://tex.stackexchange.com/a/134857
+\makeatletter
+\renewcommand{\@maketitle}{\null\vskip 2em
+\begin{center}
+  \ifx\@subject\@empty \else
+    {\subject@font \@subject \par}
+    \vskip 1.5em
+  \fi
+  \titlefont\huge \@title\par
+  \vskip .5em
+  {\ifx\@subtitle\@empty\else\usekomafont{subtitle}\@subtitle\par\fi}%
+\end{center}
+\vskip 2em}
+\makeatother
+
+\title{Unity Mini Project}
+\subject{COMP 565 - Advanced Computer Graphics}
+\subtitle{Assignment 2}
+\date{}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\section{Approach}
+
+\section{Challenges}
+
+\section{Lessons Learned}
+
+\end{document}
