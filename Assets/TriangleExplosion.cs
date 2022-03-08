@@ -60,6 +60,7 @@ public class TriangleExplosion : MonoBehaviour
                 var obj = new GameObject("Triangle " + (i / 3));
                 obj.transform.position = transform.position;
                 obj.transform.rotation = transform.rotation;
+                obj.layer = 2; // Ignore ray casts.
                 obj.AddComponent<MeshRenderer>().material = materials[submesh];
                 obj.AddComponent<MeshFilter>().mesh = mesh;
                 obj.AddComponent<BoxCollider>();
