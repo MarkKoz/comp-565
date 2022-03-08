@@ -118,20 +118,13 @@ public class CubeManager : MonoBehaviour
         Vector3 pos;
 
         if (hitInfo.transform.tag.Equals("Base"))
-        {
-            if (ui.primitive is PrimitiveType.Capsule)
-                pos = hitInfo.point + Vector3.up;
-            else
-                pos = hitInfo.point + (Vector3.up / 2);
-        }
+            pos = hitInfo.point + (Vector3.up / 2);
         else
-        {
             // Important that the collider's transform is used.
             pos = hitInfo.collider.transform.position + hitInfo.normal;
 
-            if (ui.primitive is PrimitiveType.Capsule)
-                pos.y += 0.5f;
-        }
+        if (ui.primitive is PrimitiveType.Capsule)
+            pos.y += 0.5f;
 
         return pos;
     }
