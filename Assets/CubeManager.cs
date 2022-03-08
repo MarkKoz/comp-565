@@ -9,6 +9,8 @@ public class CubeManager : MonoBehaviour
     public UIManager ui;
 
     private Camera mainCamera;
+    private GameObject activeGuide;
+    private IReadOnlyDictionary<PrimitiveType, GameObject> guides;
     private IReadOnlyDictionary<UIManager.Texture, Material> materials;
 
     private void Start()
@@ -30,41 +32,66 @@ public class CubeManager : MonoBehaviour
             },
             { UIManager.Texture.Metal01, Resources.Load<Material>("Materials/metal01") },
         };
+
+        guides = new Dictionary<PrimitiveType, GameObject>
+        {
+            { PrimitiveType.Cube, transform.GetChild(0).gameObject },
+            { PrimitiveType.Sphere, transform.GetChild(1).gameObject },
+            { PrimitiveType.Capsule, transform.GetChild(2).gameObject },
+        };
+        activeGuide = guides[ui.primitive];
     }
 
     private void Update()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        if (Input.GetMouseButtonDown(0)) CreatePrimitiveOnHit();
-        else if (Input.GetMouseButtonDown(1)) DestroyPrimitiveOnHit();
-    }
-
-    private void CreatePrimitiveOnHit()
-    {
         bool hit = Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo);
 
         if (!hit) return;
 
-        if (hitInfo.transform.tag.Equals("Base"))
-            CreatePrimitive(new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z));
+        if (Input.GetMouseButtonDown(0))
+        {
+            CreatePrimitive(hitInfo);
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (!hitInfo.transform.tag.Equals("Base"))
+                Destroy(hitInfo.transform.gameObject);
+        }
         else
-            CreatePrimitive(hitInfo.transform.position + hitInfo.normal);
+        {
+            ShowGuide(hitInfo);
+        }
     }
 
-    private void DestroyPrimitiveOnHit()
+    private void ShowGuide(RaycastHit hitInfo)
     {
-        bool hit = Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo);
+        var newGuide = guides[ui.primitive];
 
-        if (!hit || hitInfo.transform.tag.Equals("Base")) return;
+        var colour = hitInfo.transform.tag.Equals("Base") ? Color.yellow : Color.green;
+        colour.a = 0.5f;
+        newGuide.GetComponent<MeshRenderer>().material.color = colour;
 
-        Destroy(hitInfo.transform.gameObject);
+        SetPosition(newGuide, hitInfo);
+
+        activeGuide.SetActive(false);
+        activeGuide = newGuide;
+        activeGuide.SetActive(true);
     }
 
-    private void CreatePrimitive(Vector3 position)
+    private void CreatePrimitive(RaycastHit hitInfo)
     {
         var primitive = GameObject.CreatePrimitive(ui.primitive);
         primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
-        primitive.transform.position = position;
+        SetPosition(primitive, hitInfo);
+    }
+
+    private static void SetPosition(GameObject obj, RaycastHit hitInfo)
+    {
+        if (hitInfo.transform.tag.Equals("Base"))
+            obj.transform.position = new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z);
+        else
+            obj.transform.position = hitInfo.transform.position + hitInfo.normal;
     }
 }
