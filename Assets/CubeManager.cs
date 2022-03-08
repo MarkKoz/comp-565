@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CubeManager : MonoBehaviour
 {
@@ -33,6 +34,8 @@ public class CubeManager : MonoBehaviour
 
     private void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
         if (Input.GetMouseButtonDown(0)) CreateCubeOnHit();
     }
 
