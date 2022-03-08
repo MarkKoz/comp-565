@@ -87,6 +87,11 @@ When a ray is cast, but neither the left nor the right mouse buttons were clicke
 \texttt{ShowGuide} first gets the primitive from the dictionary using \texttt{UIManager.primitive} as a key. Next, it sets its position to what \texttt{GetNewPosition} returns. Then, it sets the colour for the primitive's material; if \texttt{IsColliding} is \texttt{true}, then the colour is set to red. Finally, it deactivates the active primitive, saves the new primitive as the active one, and then activates it.
 
 \subsection{Primitive Destruction}
+When a placed object is right-clicked, it is destroyed with an explosion effect. When a primitive is created, the provided \texttt{TriangleExplosion} script is attached as a component. To trigger it, the component is retrieved and its \texttt{SplitMesh} method is triggered using \texttt{StartCoroutine}. This allows the explosion effect to be spread across several frames.
+
+The \texttt{TriangleExplosion} is modified to change the layer of the created triangles such that they are ignored by ray casts. This prevents issues like primitive creation aligning to the triangles.
+
+The script component is retrieved using \texttt{GetComponentInParent}, which looks in either the current object or its parent. Recall that \texttt{RaycastHit.transform} returns the transform of the collider, which won't necessarily be the object that has the explosion script; spheres and capsules having children for colliders, which don't have the script component.
 
 \section{Challenges}
 
