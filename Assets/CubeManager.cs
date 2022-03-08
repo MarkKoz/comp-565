@@ -57,7 +57,10 @@ public class CubeManager : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))
         {
             if (!hitInfo.transform.tag.Equals("Base"))
-                Destroy(hitInfo.transform.gameObject);
+            {
+                var explosion = hitInfo.transform.GetComponent<TriangleExplosion>();
+                StartCoroutine(explosion.SplitMesh(true));
+            }
         }
         else
         {
@@ -92,6 +95,7 @@ public class CubeManager : MonoBehaviour
             primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
             primitive.transform.position = position;
             primitive.layer = 3;
+            primitive.AddComponent<TriangleExplosion>();
         }
     }
 
