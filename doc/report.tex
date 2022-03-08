@@ -46,11 +46,38 @@ The two panels are children of the same canvas, which itself is a child of a \te
 
 Each panel has 3 buttons, which display the appropriate provided texture. The type of these textures has to be changed to \textit{Sprite} in order to use them in the UI. The panels have a vertical/horizontal layout group component to evenly space the buttons within the panels. Anchor presets are used to align the panels to the middle left or centre bottom.
 
-Each button has its \texttt{OnClick} handled by the script component in the \textit{UI} object mentioned earlier. The texture buttons use \texttt{UIManager.OnTextureClick} and the primitive type buttons use \texttt{UIManager.OnPrimitiveClick}. From the inspector, an argument is passed to these functions, which is an integer that corresponds to the \texttt{Enum}s \texttt{UIManager.Texture} and \texttt{PrimitiveType}, respectively.
+Each button has its \texttt{OnClick} handled by the script component in the \textit{UI} object mentioned earlier. The texture buttons use \texttt{UIManager.OnTextureClick} and the primitive type buttons use \texttt{UIManager.OnPrimitiveClick}. From the inspector, an argument is passed to these functions, which is an integer that corresponds to the enums \texttt{UIManager.Texture} and \texttt{PrimitiveType}, respectively.
 
 Upon a button being clicked, the appropriate handler is called. It converts the integer argument to the corresponding enum and stores the enum in the public field \texttt{UIManager.texture} or \texttt{UIManager.primitive}.
 
 \subsection{Primitive Creation}
+When the user left clicks on the base or an existing primitive, a new primitive is created using the selected texture and primitive type. The new primitive can be placed at an arbitrary location on the base, or be aligned to the selected face of an existing primitive. A new primitive cannot be placed if it will collide with an existing primitive. There is a \texttt{CubeManager} object with a script component responsible for this.
+
+\subsubsection{Position Calculation}
+To determine the position of the new primitive, a ray is cast from the current mouse position. To avoid casting rays when the UI is being clicked, \texttt{EventSystem.IsPointerOverGameObject} is checked before casting the ray. When a ray hits something due to a left click, \texttt{CreatePrimitive} is called. It uses \texttt{GetNewPosition} to get the position for the new primitive based on the ray cast hit's information.
+
+If the ray hit the base, then the position is half a unit up from the hit point so that the bottom face of the object is adjacent to the top face of the base. Otherwise, it hit an existing primitive, and the new position is the position of the hit object plus the normal of that object. The \textit{normal} is a unit vector perpendicular to the face the ray hit. This is what causes the object to be aligned to the face.
+
+Because capsules are 2 units tall rather than 1 unit tall, and their origin is at the centre rather than at the bottom or top halves, half a unit is added to the $y$ component of the final position vector for capsules. This prevents the capsule from intersecting with the base or other primitives. It also causes the capsule's bottom half to align to an adjacent face rather than the capsule's centre aligning to that face.
+
+\subsubsection{Alignment for Spheres and Capsules}
+When aligning an object to a sphere or a capsule, it is aligned as if the hit object was a cube. This makes adjacent objects nicely align in a grid. To achieve this, spheres and capsules are given a child object which has a unit \texttt{BoxCollider} and is centred on the parent. Unity treats a collision with a child as a collision with the parent too. When a ray is cast, it collides with the face of the child \texttt{BoxCollider} rather than the round surface of the sphere or capsule.
+
+Capsules are a special case since they're taller than 1 unit. While one \texttt{BoxCollider} with a height of 2 could be used, it would cause new primitives to be aligned with the middle of the capsule, which is out of alignment with the grid. Instead, the capsule uses two unit \texttt{BoxCollider}s: one for the lower half and a second for the upper half. Because the \texttt{RaycastHit.transform} returns the transform of the collider, \texttt{GetNewPosition} just thinks it's trying to align to a cube when a capsule is hit.
+
+Regarding implementation details, each \texttt{BoxCollider} needs to be in a separate child, since an object cannot have more than one collider component of the same type. Furthermore, to position the colliders in the lower/upper halves, the transform of the child must be changed rather than the centre of the collider component. Otherwise, \texttt{RaycastHit.transform.position} is indistinguishable for the lower and upper halves.
+
+\subsubsection{Placement Collision}
+A primitive cannot be placed if it collides with an existing primitive. This collision always uses the regular colliders of the primitives rather than the \texttt{BoxCollider}s described previously. This is done by putting the primitives and the \texttt{BoxCollider} children in separate layers. When casting rays for collision detection, a layer mask is used to exclude all layers except for the primitives (the base is also excluded).
+
+Collision checks are performed by \texttt{IsColliding} using \texttt{Physics.CheckSphere} if the new object will be a sphere, \texttt{Physics.CheckCapsule} if it's a capsule, and \texttt{Physics.CheckBox} for every other type. These functions are given dimensions such that the area checked for collision is equivalent to the size of the new object being created. However, because Unity considers adjacent faces to be colliding, \texttt{Physics.defaultContactOffset} is subtracted from the radius used with the collision check functions.
+
+\subsubsection{Selected Texture and Type}
+The public field \texttt{CubeManager.ui} is used to give the \texttt{CubeManager} access to the \texttt{UIManager} for its public \texttt{texture} and \texttt{primitive} fields. The \texttt{ui} field is set in the inspector.
+
+Each available texture for the primitive has a corresponding material. The \texttt{CubeManager} is initialised by loading these three materials. It uses \texttt{Resources.Load}, so the materials have to be within the \textit{Assets/Resources/} directory. When the materials are loaded, they are stored in a dictionary which maps the materials to the corresponding \texttt{UIManager.Texture} enum value.
+
+A primitive is created by passing \texttt{UIManager.primitive} to \texttt{GameObject.CreatePrimitive}. Next, the material is retrieved from the dictionary using \texttt{UIManager.texture} as the key. It is then set on the new object by assigning it to the \texttt{material} field of the object's \texttt{MeshRenderer} component.
 
 \subsection{Placement Guide}
 
