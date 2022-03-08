@@ -68,11 +68,14 @@ public class CubeManager : MonoBehaviour
     private void ShowGuide(RaycastHit hitInfo)
     {
         var newGuide = guides[ui.primitive];
+        newGuide.transform.position = GetNewPosition(hitInfo);
 
         var colour = hitInfo.transform.tag.Equals("Base") ? Color.yellow : Color.green;
+        if (IsColliding(newGuide.transform.position))
+            colour = Color.red;
+
         colour.a = 0.5f;
         newGuide.GetComponent<MeshRenderer>().material.color = colour;
-        newGuide.transform.position = GetNewPosition(hitInfo);
 
         activeGuide.SetActive(false);
         activeGuide = newGuide;
