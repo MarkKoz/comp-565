@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
@@ -6,8 +7,10 @@ using UnityEngine;
 
 public class CubeManager : MonoBehaviour
 {
-    [CanBeNull] private Camera mainCamera;
     public UIManager ui;
+
+    [CanBeNull] private Camera mainCamera;
+    private IReadOnlyDictionary<UIManager.Texture, Material> materials;
 
     private void Start()
     {
@@ -15,6 +18,19 @@ public class CubeManager : MonoBehaviour
 
         if (mainCamera is null)
             throw new ApplicationException("An enabled main camera was not found.");
+
+        materials = new Dictionary<UIManager.Texture, Material>
+        {
+            {
+                UIManager.Texture.StoneBricks01,
+                Resources.Load<Material>("Materials/stone_bricks01")
+            },
+            {
+                UIManager.Texture.StoneBricks02,
+                Resources.Load<Material>("Materials/stone_bricks02")
+            },
+            { UIManager.Texture.Metal01, Resources.Load<Material>("Materials/metal01") },
+        };
     }
 
     private void Update()
@@ -29,15 +45,15 @@ public class CubeManager : MonoBehaviour
         if (!hit) return;
 
         if (hitInfo.transform.tag.Equals("Base"))
-            CreateCube(new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z));
+            CreatePrimitive(new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z));
         else
-            CreateCube(hitInfo.transform.position + hitInfo.normal);
+            CreatePrimitive(hitInfo.transform.position + hitInfo.normal);
     }
 
-    private static void CreateCube(Vector3 position)
+    private void CreatePrimitive(Vector3 position)
     {
-        var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.tag = "Cube";
-        cube.transform.position = position;
+        var primitive = GameObject.CreatePrimitive(ui.primitive);
+        primitive.GetComponent<MeshRenderer>().material = materials[ui.texture];
+        primitive.transform.position = position;
     }
 }
