@@ -23,10 +23,11 @@ public class UIManager : MonoBehaviour
         primitive = IntToEnum<PrimitiveType>(index);
     }
 
-    private static T IntToEnum<T>(int index) where T : Enum
+    private static T IntToEnum<T>(int index)
+        where T : Enum
     {
         if (Enum.IsDefined(typeof(T), index))
-            return (T)Enum.ToObject(typeof(T), index);
+            return (T) Enum.ToObject(typeof(T), index);
 
         throw new ArgumentOutOfRangeException(nameof(index), $"Invalid index for {nameof(T)}.");
     }

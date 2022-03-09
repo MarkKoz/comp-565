@@ -31,26 +31,22 @@ public class TriangleExplosion : MonoBehaviour
         var normals = m.normals;
         var uvs = m.uv;
 
-        for (int submesh = 0; submesh < m.subMeshCount; submesh++)
-        {
+        for (int submesh = 0; submesh < m.subMeshCount; submesh++) {
             int[] indices = m.GetTriangles(submesh);
 
-            for (int i = 0; i < indices.Length; i += 3)
-            {
+            for (int i = 0; i < indices.Length; i += 3) {
                 var newVerts = new Vector3[3];
                 var newNormals = new Vector3[3];
                 var newUvs = new Vector2[3];
 
-                for (int n = 0; n < 3; n++)
-                {
+                for (int n = 0; n < 3; n++) {
                     int index = indices[i + n];
                     newVerts[n] = verts[index];
                     newUvs[n] = uvs[index];
                     newNormals[n] = normals[index];
                 }
 
-                var mesh = new Mesh
-                {
+                var mesh = new Mesh {
                     vertices = newVerts,
                     normals = newNormals,
                     uv = newUvs,
@@ -68,9 +64,12 @@ public class TriangleExplosion : MonoBehaviour
                 var explosionPos = new Vector3(
                     transform.position.x + UnityEngine.Random.Range(-0.5f, 0.5f),
                     transform.position.y + UnityEngine.Random.Range(0f, 0.5f),
-                    transform.position.z + UnityEngine.Random.Range(-0.5f, 0.5f));
+                    transform.position.z + UnityEngine.Random.Range(-0.5f, 0.5f)
+                );
 
-                obj.AddComponent<Rigidbody>().AddExplosionForce(UnityEngine.Random.Range(300, 500), explosionPos, 5);
+                obj.AddComponent<Rigidbody>().AddExplosionForce(
+                    UnityEngine.Random.Range(300, 500), explosionPos, 5
+                );
                 Destroy(obj, 5 + UnityEngine.Random.Range(0.0f, 5.0f));
             }
         }
