@@ -6,9 +6,18 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
+\usepackage{microtype}
+
 \usepackage{hyperref}
 \hypersetup{bookmarksnumbered}
 \usepackage{bookmark}
+
+% Hyphenate texttt.
+% https://tex.stackexchange.com/a/204420
+\makeatletter
+\input{t1lmtt.fd}
+\@namedef{T1+lmtt}{}
+\makeatother
 
 % Remove space reserved for unused fields.
 % https://tex.stackexchange.com/a/134857
@@ -55,7 +64,7 @@ Upon a button being clicked, the appropriate handler is called. It converts the 
 When the user left clicks on the base or an existing primitive, a new primitive is created using the selected texture and primitive type. The new primitive can be placed at an arbitrary location on the base, or be aligned to the selected face of an existing primitive. A new primitive cannot be placed if it will collide with an existing primitive. There is a \texttt{CubeManager} object with a script component responsible for this.
 
 \subsubsection{Position Calculation}
-To determine the position of the new primitive, a ray is cast from the current mouse position. To avoid casting rays when the UI is being clicked, \texttt{EventSystem.IsPointerOverGameObject} is checked before casting the ray. When a ray hits something due to a left click, \texttt{CreatePrimitive} is called. It uses \texttt{GetNewPosition} to get the position for the new primitive based on the ray cast hit's information.
+To determine the position of the new primitive, a ray is cast from the current mouse position. To avoid casting rays when the UI is being clicked, \texttt{EventSystem.IsPointerOver\-GameObject} is checked before casting the ray. When a ray hits something due to a left click, \texttt{CreatePrimitive} is called. It uses \texttt{GetNewPosition} to get the position for the new primitive based on the ray cast hit's information.
 
 If the ray hit the base, then the position is half a unit up from the hit point so that the bottom face of the object is adjacent to the top face of the base. Otherwise, it hit an existing primitive, and the new position is the position of the hit object plus the normal of that object. The \textit{normal} is a unit vector perpendicular to the face the ray hit. This is what causes the object to be aligned to the face.
 
@@ -78,7 +87,7 @@ The public field \texttt{CubeManager.ui} is used to give the \texttt{CubeManager
 
 Each available texture for the primitive has a corresponding material. The \texttt{CubeManager} is initialised by loading these three materials. It uses \texttt{Resources.Load}, so the materials have to be within the \textit{Assets/Resources/} directory. When the materials are loaded, they are stored in a dictionary which maps the materials to the corresponding \texttt{UIManager.Texture} enum value.
 
-A primitive is created by passing \texttt{UIManager.primitive} to \texttt{GameObject.CreatePrimitive}. Next, the material is retrieved from the dictionary using \texttt{UIManager.texture} as the key. It is then set on the new object by assigning it to the \texttt{material} field of the object's \texttt{MeshRenderer} component.
+A primitive is created by passing \texttt{UIManager.primitive} to \texttt{GameObject.Create\-Primitive}. Next, the material is retrieved from the dictionary using \texttt{UIManager.texture} as the key. It is then set on the new object by assigning it to the \texttt{material} field of the object's \texttt{MeshRenderer} component.
 
 \subsection{Placement Guide}
 When the mouse is hovered over the base or a placed object, a visual guide for placement is shown. This guide has the same shape as the currently selected primitive type, but it's texture is simply a translucent colour. It's green if the placed object will align with an existing object, yellow if it doesn't align, and red if it collides with an existing object.
