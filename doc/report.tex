@@ -87,6 +87,8 @@ When a ray is cast, but neither the left nor the right mouse buttons were clicke
 
 \texttt{ShowGuide} first gets the primitive from the dictionary using \texttt{UIManager.primitive} as a key. Next, it sets its position to what \texttt{GetNewPosition} returns. Then, it sets the colour for the primitive's material; if \texttt{IsColliding} is \texttt{true}, then the colour is set to red. Finally, it deactivates the active primitive, saves the new primitive as the active one, and then activates it.
 
+The children are in layer 2, which is ignored by ray casts by default. This will ensure that the visual guide isn't position adjacent to the guide in the previous frame. The children also use a custom material, which is really just the default material but with a flag changed to support transparency. The actual transparency is set in the script by setting the alpha channel to 0.5 when the material's colour is changed.
+
 \subsection{Primitive Destruction}
 When a placed object is right-clicked, it is destroyed with an explosion effect. When a primitive is created, the provided \texttt{TriangleExplosion} script is attached as a component. To trigger it, the component is retrieved and its \texttt{SplitMesh} method is triggered using \texttt{StartCoroutine}. This allows the explosion effect to be spread across several frames.
 
