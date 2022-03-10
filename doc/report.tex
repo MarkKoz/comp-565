@@ -12,6 +12,9 @@
 \hypersetup{bookmarksnumbered}
 \usepackage{bookmark}
 
+\usepackage{graphicx}
+\usepackage{subfig}
+
 % Hyphenate texttt.
 % https://tex.stackexchange.com/a/204420
 \makeatletter
@@ -52,6 +55,18 @@ This is a simple building block application in Unity. A user can left click to p
 \subsection{User Interface}
 The user interface needs to allow the user to select the new primitive's texture and type. There are three choices for each. The UI is divided into two distinct parts: a panel along the left edge for the type buttons, and a panel along the bottom edge for the texture selection.
 
+\begin{figure}[htp]
+  \centering
+  \subfloat[\centering textures]{
+    \includegraphics[scale=0.6]{images/01a_ui_texture.png}
+  }
+  \qquad
+  \subfloat[\centering types]{
+    \includegraphics[scale=0.6]{images/01b_ui_type.png}
+  }
+  \caption{UI panels}
+\end{figure}
+
 The two panels are children of the same canvas, which itself is a child of a \textit{UI} object. This object is for organisational purposes and for housing the script component for handling UI interactions.
 
 Each panel has 3 buttons, which display the appropriate provided texture. The type of these textures has to be changed to \textit{Sprite} in order to use them in the UI. The panels have a vertical/horizontal layout group component to evenly space the buttons within the panels. Anchor presets are used to align the panels to the middle left or centre bottom.
@@ -75,7 +90,29 @@ When aligning an object to a sphere or a capsule, it is aligned as if the hit ob
 
 Capsules are a special case since they're taller than 1 unit. While one \texttt{BoxCollider} with a height of 2 could be used, it would cause new primitives to be aligned with the middle of the capsule, which is out of alignment with the grid. Instead, the capsule uses two unit \texttt{BoxCollider}s: one for the lower half and a second for the upper half. Because the \texttt{RaycastHit.transform} returns the transform of the collider, \texttt{GetNewPosition} just thinks it's trying to align to a cube when a capsule is hit.
 
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=\linewidth]{images/02_box_colliders.png}
+  \caption{Rendered \texttt{BoxCollider}s}
+\end{figure}
+
 Regarding implementation details, each \texttt{BoxCollider} needs to be in a separate child, since an object cannot have more than one collider component of the same type. Furthermore, to position the colliders in the lower/upper halves, the transform of the child must be changed rather than the centre of the collider component. Otherwise, \texttt{RaycastHit.transform.position} is indistinguishable for the lower and upper halves.
+
+\begin{figure}[htp]
+  \centering
+  \subfloat[\centering bottom half]{
+    \includegraphics[width=0.28\linewidth]{images/03a_capsule_align_bottom_half.png}
+  }
+  \qquad
+  \subfloat[\centering top half]{
+    \includegraphics[width=0.28\linewidth]{images/03b_capsule_align_top_half.png}
+  }
+  \qquad
+  \subfloat[\centering above]{
+    \includegraphics[width=0.28\linewidth]{images/03c_capsule_align_above.png}
+  }
+  \caption{Capsule alignment}
+\end{figure}
 
 \subsubsection{Placement Collision}
 A primitive cannot be placed if it collides with an existing primitive. This collision always uses the regular colliders of the primitives rather than the \texttt{BoxCollider}s described previously. This is done by putting the primitives and the \texttt{BoxCollider} children in separate layers. When casting rays for collision detection, a layer mask is used to exclude all layers except for the primitives (the base is also excluded).
@@ -92,6 +129,22 @@ A primitive is created by passing \texttt{UIManager.primitive} to \texttt{GameOb
 \subsection{Placement Guide}
 When the mouse is hovered over the base or a placed object, a visual guide for placement is shown. This guide has the same shape as the currently selected primitive type, but it's texture is simply a translucent colour. It's green if the placed object will align with an existing object, yellow if it doesn't align, and red if it collides with an existing object.
 
+\begin{figure}[htp]
+  \centering
+  \subfloat[\centering aligned]{
+    \includegraphics[width=0.28\linewidth]{images/04a_guide_green.png}
+  }
+  \qquad
+  \subfloat[\centering non-aligned]{
+    \includegraphics[width=0.28\linewidth]{images/04b_guide_yellow.png}
+  }
+  \qquad
+  \subfloat[\centering colliding]{
+    \includegraphics[width=0.28\linewidth]{images/04c_guide_red.png}
+  }
+  \caption{Placement guide}
+\end{figure}
+
 When a ray is cast, but neither the left nor the right mouse buttons were clicked, \texttt{ShowGuide} is called to display the visual guide. There \texttt{CubeManager} has three children, one for each primitive. The guide is shown by activating and deactivating these child primitives. These primitives are stored in a dictionary when the \texttt{CubeManager} is initialised. Furthermore, the \texttt{CubeManager} keeps track of the active object in a private field.
 
 \texttt{ShowGuide} first gets the primitive from the dictionary using \texttt{UIManager.primitive} as a key. Next, it sets its position to what \texttt{GetNewPosition} returns. Then, it sets the colour for the primitive's material; if \texttt{IsColliding} is \texttt{true}, then the colour is set to red. Finally, it deactivates the active primitive, saves the new primitive as the active one, and then activates it.
@@ -100,6 +153,12 @@ The children are in layer 2, which is ignored by ray casts by default. This will
 
 \subsection{Primitive Destruction}
 When a placed object is right-clicked, it is destroyed with an explosion effect. When a primitive is created, the provided \texttt{TriangleExplosion} script is attached as a component. To trigger it, the component is retrieved and its \texttt{SplitMesh} method is triggered using \texttt{StartCoroutine}. This allows the explosion effect to be spread across several frames.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=\linewidth]{images/05_explosion.png}
+  \caption{Explosions}
+\end{figure}
 
 The \texttt{TriangleExplosion} is modified to change the layer of the created triangles such that they are ignored by ray casts. This prevents issues like primitive creation aligning to the triangles.
 
