@@ -386,6 +386,28 @@ Snapshot update packets are built from serialised network variables. Thus, entit
 \end{figure}
 
 \subsubsection{Unity}
+There are several networking APIs offered by Unity. First is the now deprecated UNet, which houses the high-level networking API (HLAPI) and the Transport Layer API. The latter is a lower-level API meant for more advanced multiplayer games. Unity is also working on a new multiplayer and networking solution named \textit{Netcode for GameObjects}. This is meant to replace UNet.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.66\linewidth]{images/unity_net_layers.png}
+  \caption{Layers of the HLAPI}
+  \label{fig:unity_net_layers}
+\end{figure}
+
+Akin to network entities in Source, there is a Network Identity component that makes game objects uniquely identifiable across the client-server boundary. Also like Source, Unity can automatically synchronise the states of game objects and script variables. This is done through various components, such as Network Transforms for position synchronisation and Network Animators for animation synchronisation. This component-based system, which is fundamental to Unity as a whole, is quite different from how synchronisation is defined in Source.
+
+Fields of scripts can be synchronised using \texttt{SyncVar} annotations. This is more similar to the macros used in Source to designate variables as networked. As with source, this kind of synchronisation is uni-directional; data is synchronised from the server to remote clients. To perform synchronisation in the opposite direction in Unity, commands have to be used. This is also similar to Source, which has the client send user command packets to the server.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.66\linewidth]{images/unity_net_actions.jpg}
+  \caption{Directions of remote actions}
+  \label{fig:unity_net_actions}
+\end{figure}
+
+\paragraph{Lag}
+UNet can support interpolation like Source. However, client-side prediction and lag compensation seem to only be features supported by the newer Netcode for GameObjects. These concepts are standard in the industry, so Unity's implementation of them isn't too dissimilar to Source's. Netcode also supports \textit{action anticipation}, which is similar to client-side prediction, but more restrictive. The example used to explain it is a grenade throw. It shouldn't be fully predicted on the client side since its destructive abilities may cause prediction errors which are too noticeable. In such case, it may be desirable to play non-gameplay impacting animations, sounds, and effects while still relying on the server to confirm the grenade's trajectory and destructive consequences.
 
 \subsection{Platforms}
 \subsubsection{Source}
