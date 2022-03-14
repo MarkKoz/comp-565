@@ -65,6 +65,7 @@ For scripting, Unity Editor allows scripts to be edited with virtually any text 
 \subsubsection{Source}
 The engine itself is written in C++ so naturally, programming a game with the Source engine is also done in C++. The full source code of the engine can be licensed. Valve also offers a portion of the engine's C++ code with the Source SDK. This is enough to make a game with the SDK, but it doesn't give access to the engine's internals such as its core networking code. The Source engine also comes with it's own Standard Template Library named \texttt{CUtl}, which is located within the \texttt{Tier1} library of the engine.
 
+\paragraph{Scripts}
 The engine also supports external scripts using the VScript virtual machine and API. Depending on the version of the SDK, different languages are supported. VScript first shipped with support for the Squirrel language. However, Source Filmmaker uses Python and Portal 2 has limited Lua support.
 
 \begin{figure}[!htp]
@@ -90,10 +91,12 @@ The engine also supports external scripts using the VScript virtual machine and 
   \label{fig:source_vscript}
 \end{figure}
 
+Scripts can be attached to any entity via the \textit{Entity Scripts} property. Multiple scripts can be attached to an entity simultaneously. The input \texttt{RunScriptCode} can be used to execute VScript code within the script scope of the target entity's attached scripts. Similarly, \texttt{CallScriptFunction} can be used to call a function. There is also \texttt{RunScriptFile}, which can be used to run a script from disk and merge its contents with the script scope of the target entity. Inputs and outputs for entities will be discussed in more detail shortly.
+
 It is technically possible to add support for scripting with any language, without relying on VScript. Garry's mod did this with Lua, and there is also a project by modders which added Python support.
 
 \paragraph{I/O Entities}
-Besides directly programming in C++ and VScript, there is an I/O system by which entities communicate between each other. This system can be leveraged to program entities in Hammer. Effectively, an entity's event can be hooked so that an action is performed on another entity when the event occurs. In fact, entities in Hammer can also be used to run VScripts.
+Besides directly programming in C++ and VScript, there is an I/O system by which entities communicate between each other. This system can be leveraged to program entities in Hammer. Effectively, an entity's event can be hooked so that an action is performed on another entity when the event occurs.
 
 For example, \cref{fig:source_entities} shows some of the entities used to control an elevator. The four stacked \texttt{logic\_relay}s control the doors for each of the four floors. The \texttt{logic\_compare} chooses the next path node for the elevator to travel to. The \texttt{logic\_relay} at the bottom right performs actions when the elevator needs to stop.
 
@@ -143,5 +146,58 @@ There are many other events, such as one for the player getting hurt or a team w
   \caption{A portion of CS:GO's \textit{resource/gameevents.res}}
   \label{fig:source_gameevents}
 \end{figure}
+
+\subsubsection{Unity}
+The Unity engine is written in C++. For a fee, it is possible to license the engine's source code and modify it directly. Unlike the Source engine, there is no free offering of a portion of the engine's source code. Thus, for most, the only option is to use Unity's C\# scripting APIs. Thankfully, these APIs are far more powerful and comprehensive than the Source engine's.
+
+\paragraph{Scripts}
+Scripts can be attached to game objects as components. This is similar to VScripts in the sense that VScripts can be attached to any entity. The inspector in Unity Editor will show all public fields of the script in the component's UI. There isn't an equivalent to this for VScripts. It's possible to access other scripts' public fields programmatically by getting the script components of other game objects.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[scale=0.75]{images/unity_script_inspector.png}
+  \caption{Setting a script's public fields in the inspector}
+  \label{fig:unity_script_inspector}
+\end{figure}
+
+Scripts have an \texttt{Update} function which is called every frame. This is similar to the ``think'' function that VScripts have. They also have a \texttt{Start} function which is called before frames start being updated, so it's useful for initialisation code. Neither function has to be used though. For example, it may be desirable to have a script that holds functions used to handle events. Such functions can be hooked up using the inspector.
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cs}
+    using UnityEngine;
+
+    public class ColourChanger : MonoBehaviour {
+        private void Start() {
+            Debug.Log("Starting ColourChanger.");
+        }
+
+        private void Update() {
+            GetComponent<Renderer>().material.color = Random.ColorHSV();
+        }
+    }
+  \end{minted}
+  \caption{Script which sets a random colour for the object every frame}
+  \label{fig:unity_script}
+\end{figure}
+
+\paragraph{Events}
+Some events have already been discussed, such as \texttt{Start} and \texttt{Update}. There are many other built-in events, such as UI events (e.g. clicking a button) and physics events (e.g. collision detection).
+
+Custom events can be created using \texttt{UnityEvent} objects. If one is added as a public field of a script, it's possible to add a callback along with an argument for the event via the inspector. This is similar to the outputs menu in Hammer, but with a nicer interface; the editor displays a different UI component depending on the data type of the argument. For example, in \cref{fig:unity_event_inspector}, the argument is represented by a check box since it is a \texttt{bool}.
+
+Alternatively, event listeners can be attached programmatically with \texttt{UnityEvent\-.AddListener}. Events can be invoked programmatically with \texttt{UnityEvent.Invoke}.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[scale=0.75]{images/unity_event_inspector.png}
+  \caption{Attaching a function to a button's \texttt{onClick} event}
+  \label{fig:unity_event_inspector}
+\end{figure}
+
+There is also a general-purpose messaging system, which can be used to send custom messages to any game object which is registered to receive them. To create a custom message, an interface implementing \texttt{IEventSystemHandler} can be defined with some event handling functions. Then, any game object's script can implement this interface and define concrete event handlers. \texttt{ExecuteEvents.Execute} can be called with a specific \texttt{IEventSystemHandler}, a target game object, and a function in the interface. Any component of the target which implements the interface will have the specified function executed.
 
 \end{document}
