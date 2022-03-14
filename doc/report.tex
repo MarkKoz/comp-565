@@ -218,6 +218,65 @@ There is also a general-purpose messaging system, which can be used to send cust
 
 \subsection{AI}
 \subsubsection{Source}
+The Source engine has a sophisticated AI system. This system is separate from its choreography system, which won't be part of the discussion. Like all entities, NPCs have a \texttt{Think} function which allows the NPC to schedule code to run in the future. Thinks can be continuously rescheduled to effectively make an entity autonomous. Every time an NPC thinks to make a decision, it follows these steps:
+
+\begin{enumerate}
+  \item Perform sensing
+  \item Generate a list of conditions
+  \item Choose an appropriate state
+  \item Selected a new schedule if appropriate
+  \item Perform the current task
+\end{enumerate}
+
+\paragraph{Sensing}
+Sensing is the process of generating a list of entities that an NPC can see and a list of sounds it can hear. These can be filtered out to ignore sights and sounds the NPC shouldn't care about.
+
+An NPC has a potentially visible set (PVS), which is the spatial area that may be visible to the NPC at its current location. When an entity enters the PVS, there a viewcone test is performed to more accurately determine if the NPC can see this entity. The viewcone represents the spatial geometry of the NPC's current visual field, which is determined by the NPC's range (the viewcone's ``depth'') and its field of view (the viewcone's ``scope''). If an entity is within the viewcone, then a line-of-sight test is performed by casting a ray from the NPC to the entity. This determines if the view of the entity is obstructed by another object.
+
+Similar to the PVS, there is a potentially audible set, which is the spatial area that may be audible to the NPC. However, unlike the PVS, there are no further steps involving the viewcone or LOS.
+
+\paragraph{Conditions}
+Conditions are flags stored on the NPC which represent some state in the world. They are determined from the sensed sights and sounds. For example, a condition may be set for when an enemy is seen, or when the NPC goes underwater. Conditions can also be used to interrupt schedules. For example, if a condition is set for choosing a new enemy, then this will interrupt a running schedule for chasing the current enemy.
+
+\paragraph{State}
+An NPC's state is based upon its conditions. In a sense, a state itself can be thought of as a condition, but in a much broader sense. However, an NPC can only be in one state. Examples of states include being dead, being in combat, and being idle.
+
+\paragraph{Schedule}
+The state, together with the conditions, are used to determine an appropriate schedule for the NPC. A schedule is a list of tasks for the NPC to perform, so it can be thought of as an overall action which the NPC is carrying out. An example of a schedule is an NPC taking cover to reload their weapon. An NPC can only have one schedule, and a new schedule is only chosen when there is no active one (due to the previous schedule being completed, failed, or interrupted).
+
+\paragraph{Tasks}
+A task is a discrete action within a schedule. Tasks are performed serially until the schedule is completed. Following the example schedule of taking cover to reload, the following tasks would be performed:
+
+\begin{enumerate}
+  \item Find a location for cover
+  \item Find a path to that location
+  \item Traverse the path
+  \item Reload the gun
+\end{enumerate}
+
+\paragraph{Behaviours}
+Behaviours are an abstraction of AI code. They can be re-used by many NPCs rather than being coupled to a single type of NPC. Some pre-existing behaviours include following another NPC, leading the player to a location, or appearing to be ``busy'' (performing some inconsequential action or idling).
+
+\paragraph{Navigation}
+NPCs can navigate via a node graph or via a navigation mesh. Typically, the latter is used by ``bots'', though there is a more general-purpose \textit{NextBot} system in some of Valve's games which makes use of navigation meshes. However, it is not available in any public Source SDK release. A navigation mesh can be auto-generated and also manually edited in-game. In contrast, a node graph is generated from manually placed node entities within a map.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=\linewidth]{images/source_node_graph.jpg}
+  \caption{A node graph in the penultimate map of Half-Life 2: Episode One}
+  \label{fig:source_node_graph}
+\end{figure}
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=\linewidth]{images/source_nav_mesh.png}
+  \caption{Editing a navigation mesh in-game}
+  \label{fig:source_nav_mesh}
+\end{figure}
+
+\paragraph{Other Features}
+There are many other features in the AI system. There is an entire response system to manage speech and dialogue. NPCs can be in squads, which allows them to cover each other, move as a unit, share information, etc. Squads or single NPCs can also be programmed to perform an assault, in which they rally to points and, on cue, commence an assault on one or more points in the world. An NPC can have a relationship with another NPC, such as liking, fearing, or hating another NPCs. For example, if an NPC is fearful of another, they may flee or take cover from them.
+
 \subsubsection{Unity}
 
 \subsection{Networking}
