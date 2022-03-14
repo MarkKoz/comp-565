@@ -1,5 +1,9 @@
+% !TEX output_directory = ./.temp/report
+% !TEX options = --shell-escape
+
 \documentclass[a4paper, 12pt]{scrartcl}
 \usepackage[assign-num=3]{report}
+\usepackage[outputdir=./.temp/report]{minted}
 
 \title{Comparison of Game Engines}
 
@@ -56,5 +60,88 @@ The primary development environment for Unity is the Unity Editor. This environm
 The Unity environment is much more extensible than Source. Its package management system makes it easy to obtain first and third-party extensions to the Unity Editor. This same mechanism can also be used to import third-party assets from the internet. In general, using assets is easier compared to Source since Unity supports standard formats, and can even automatically convert formats in some cases.
 
 For scripting, Unity Editor allows scripts to be edited with virtually any text editor. It also natively supports deeper integration with several IDEs: Visual Studio, Visual Studio Code, and JetBrains Rider.
+
+\subsection{Programming}
+\subsubsection{Source}
+The engine itself is written in C++ so naturally, programming a game with the Source engine is also done in C++. The full source code of the engine can be licensed. Valve also offers a portion of the engine's C++ code with the Source SDK. This is enough to make a game with the SDK, but it doesn't give access to the engine's internals such as its core networking code. The Source engine also comes with it's own Standard Template Library named \texttt{CUtl}, which is located within the \texttt{Tier1} library of the engine.
+
+The engine also supports external scripts using the VScript virtual machine and API. Depending on the version of the SDK, different languages are supported. VScript first shipped with support for the Squirrel language. However, Source Filmmaker uses Python and Portal 2 has limited Lua support.
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{js}
+    function GiveGun(weapon, playerarray) {
+      local equipper = Entities.CreateByClassname("game_player_equip")
+      equipper.__KeyValueFromInt("spawnflags", 5)
+      equipper.__KeyValueFromInt(weapon, 0)
+      equipper.ValidateScriptScope()
+
+      for (player in playerarray) {
+        EntFireByHandle(equipper, "Use", "", 0, player, null)
+      }
+
+      EntFireByHandle(equipper, "Kill", "", 0.1, null, null)
+    }
+  \end{minted}
+  \caption{VScript in Squirrel for CS:GO which equips players}
+  \label{fig:source_vscript}
+\end{figure}
+
+It is technically possible to add support for scripting with any language, without relying on VScript. Garry's mod did this with Lua, and there is also a project by modders which added Python support.
+
+\paragraph{I/O Entities}
+Besides directly programming in C++ and VScript, there is an I/O system by which entities communicate between each other. This system can be leveraged to program entities in Hammer. Effectively, an entity's event can be hooked so that an action is performed on another entity when the event occurs. In fact, entities in Hammer can also be used to run VScripts.
+
+For example, \cref{fig:source_entities} shows some of the entities used to control an elevator. The four stacked \texttt{logic\_relay}s control the doors for each of the four floors. The \texttt{logic\_compare} chooses the next path node for the elevator to travel to. The \texttt{logic\_relay} at the bottom right performs actions when the elevator needs to stop.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.75\linewidth]{images/source_io_entities.png}
+  \caption{Logic entities for controlling an elevator}
+  \label{fig:source_entities}
+\end{figure}
+
+The last \texttt{logic\_relay} is pictured in more detail in \cref{fig:source_elev_stop}. The purpose of a \texttt{logic\_relay} is to forward messages; it can turn one input into many outputs. Another entity can trigger the relay, which causes the relay to fire an \texttt{OnTrigger} event. \texttt{elev\_stop} is being triggered by the aforementioned \texttt{logic\_compare}. \texttt{elev\_stop} has four outputs that occur when the \texttt{OnTrigger} event is fired. Each output targets a different entity and sends it some input. The first stops the elevator, the second plays a bell sound, and the last two open doors.
+
+\begin{figure}[!htp]
+  \centering
+  \subfloat[\centering inputs]{
+    \includegraphics[width=0.45\linewidth]{images/source_io_elev_stop_in.png}
+  }
+  \qquad
+  \subfloat[\centering outputs]{
+    \includegraphics[width=0.45\linewidth]{images/source_io_elev_stop_out.png}
+  }
+  \caption{The configured I/O of the \texttt{logic\_relay} entity named \texttt{elev\_stop}}
+  \label{fig:source_elev_stop}
+\end{figure}
+
+\paragraph{Events}
+There are many other events, such as one for the player getting hurt or a team winning a round. Data can be associated with an event, for example, which player got hurt or which team won. The \texttt{logic\_eventlistener} entity can be used to listen to events. In C++, \texttt{CGameEventListener::ListenForGameEvent} can be used. The \texttt{CGameEventManager} class can be used to interact with events, be it creating a new event, firing an event, or registering an event listener. Events are declared in various \texttt{.res} files in the \textit{resources} directory of the game. These get loaded using \texttt{CGameEventManager::LoadEventsFromFile}.
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{js}
+    "game_end"              // a game ended
+    {
+      "winner"  "byte"      // winner team/user id
+    }
+
+    "round_start"
+    {
+      "timelimit" "long"    // round time limit in seconds
+      "fraglimit" "long"    // frag limit in seconds
+      "objective" "string"  // round objective
+    }
+  \end{minted}
+  \caption{A portion of CS:GO's \textit{resource/gameevents.res}}
+  \label{fig:source_gameevents}
+\end{figure}
 
 \end{document}
