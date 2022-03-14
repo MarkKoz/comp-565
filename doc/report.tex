@@ -19,4 +19,31 @@ The earliest software that may constitute a game engine was in-house for use wit
 
 Such engines were developed for first-party games, but made available for licensing to third-party developers. Companies shifted their strategy to developing the game and its engine separately. This decoupling enabled the engine to be usable by third parties, and allowed developers to become more specialised.
 
+\section{Comparing Source and Unity}
+This section compares and contrasts various aspects of two different engines: Source by Valve Software and Unity by Unity Technologies.
+
+\subsection{Development Environment}
+\subsubsection{Source}
+Programming is done in C++, typically using Visual Studio. However, other IDEs can also work. A level editor named \textit{Hammer} is included in the Source SDK. When not programming or making assets, this is tool that is being worked with the most. It is used to define the level's geometry, apply textures, light the level, place objects and entities, configure behaviour logic for entities, and much more.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=\linewidth]{images/source_hammer.png}
+  \caption{Hammer editing \textit{cs\_office} from CS:GO}
+\end{figure}
+
+Assets such as models and textures are expected to be created using third-party tools. For modelling, Autodesk XSI and Maya were historically popular. However, it's more common these days to use one of the third-party plugins for other modelling tools such as Blender.
+
+Some assets, including models and textures, are expected to be in Source-specific formats. To achieve this, the Source SDK provides some command-line tools to convert assets to the expected formats. For example, \texttt{vtex} is used for texture conversion and \texttt{studiomdl} is used to compile models. There are various other command-line tools, like \texttt{vbsp}, \texttt{vvis}, and \texttt{vrad} for map compilation and \texttt{vpk} for packaging game assets.
+
+There are also third-party tools frequently used by modders and level designers, such as VIDE, which can be used to create textures, view or create game content packages, edit particles, pack game content into map files, and much more.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=\linewidth]{images/source_vide_pakfile.png}
+  \caption{VIDE displaying the pakfile lump of a map}
+\end{figure}
+
+\paragraph{Unity}
+
 \end{document}
