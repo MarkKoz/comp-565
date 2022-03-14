@@ -4,6 +4,7 @@
 \documentclass[a4paper, 12pt]{scrartcl}
 \usepackage[assign-num=3]{report}
 \usepackage[outputdir=./.temp/report]{minted}
+\usepackage{svg}
 
 \title{Comparison of Game Engines}
 
@@ -278,6 +279,16 @@ NPCs can navigate via a node graph or via a navigation mesh. Typically, the latt
 There are many other features in the AI system. There is an entire response system to manage speech and dialogue. NPCs can be in squads, which allows them to cover each other, move as a unit, share information, etc. Squads or single NPCs can also be programmed to perform an assault, in which they rally to points and, on cue, commence an assault on one or more points in the world. An NPC can have a relationship with another NPC, such as liking, fearing, or hating another NPCs. For example, if an NPC is fearful of another, they may flee or take cover from them.
 
 \subsubsection{Unity}
+Unlike the Source engine, Unity has few AI features inherently. It has an AI module, but it only supports path finding features using a navigation mesh. Other core features such as dialogue or behaviour need to be programmed from scratch, or implemented via a third-party package, such as PandasBT for behaviour trees or Pixel Crusher's dialogue system.
+
+Like with Source, navigation meshes can be automatically generated in Unity. These meshes are the primary way for all path finding, unlike Source which additionally has node graphs.
+
+\begin{figure}[!htp]
+  \centering
+  \includesvg[inkscapelatex=false, width=0.75\linewidth]{images/unity_nav_loop.svg}
+  \caption{Overview of pathfinding in Unity}
+  \label{fig:unity_nav_loop}
+\end{figure}
 
 \subsection{Networking}
 \subsubsection{Source}
