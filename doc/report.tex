@@ -292,6 +292,99 @@ Like with Source, navigation meshes can be automatically generated in Unity. The
 
 \subsection{Networking}
 \subsubsection{Source}
+Source uses a client-server architecture. The server is typically the authoritative source about the simulation of the world/physics, game rules, and input processing. A client and server communicate with each other using UDP packets. The server sends the world state to clients, and clients base their video and audio outputs on this received state. Clients receive inputs from players and send that data to the server for processing.
+
+The game is simulate by the server in discrete units of time called \textit{ticks}. For each tick, the server processes inputs, runs a step of the physics simulation, checks game rules, and updates object states. By default, the tick rate is $66.\bar6$ ticks per second. This can be increased to make the simulation more precise, but at the cost on increase CPU and bandwidth usage.
+
+After simulation, the server determines if there are clients in need of a world update, and if so, it generates a snapshot of the current state to later send to the clients. These snapshots are used instead of sending a new update packet to each client for every change. The server employs \textit{delta compression} for these snapshots to avoid sending redundant information. The idea is to only send a snapshot including the states that actually changed. To achieve this, the client must acknowledge the updates it receives. The server generates the delta snapshot based on the updates that have occurred since the last acknowledged update by the client. In cases of packet loss, full snapshots may be sent to clients to help them recover.
+
+Similar to the server's snapshots, the client does not send a packet for every user command (user inputs). Instead, it groups commands together and sends them in a single packet at a fixed rate.
+
+\paragraph{Interpolation}
+To conserve bandwidth, snapshots are sent at a rate of 20 per second by default. This is not sufficient for the clients to render the updates smoothly. To avoid a choppy appearance, the client interpolates entity state between the two most recent snapshots. At 20 snapshots per second, a new snapshot arrives every 50 milliseconds. Thus, the client has to interpolate the last 50 milliseconds to make things appear smooth.
+
+Packet loss can have a detrimental effect on interpolation. To solve this, the interpolation period is set to 100 milliseconds by default. This means that if the previous snapshot is lost, the one before it will still be within the period for interpolation. \cref{fig:source_net_interp} demonstrates this: even if the snapshot at tick 342 is lost, the snapshot at 340 is still within the interpolation period. This does effectively mean that the client's view is always behind by 100 ms, or whatever the configured period is.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.66\linewidth]{images/source_net_interp.png}
+  \caption{Interpolation timeline with a period of 100 ms}
+  \label{fig:source_net_interp}
+\end{figure}
+
+Of course, a leeway of 2 snapshots isn't always sufficient; both snapshots could be lost. In such cases, the client can linearly extrapolate state based on the client's last known state of that entity. However, this is only done up to a certain duration of packet loss; beyond that, prediction errors are too severe.
+
+\paragraph{Prediction}
+Clients inevitably have some network latency. If the client had to strictly rely on the server for updates resulting from player input, the visual feedback to the player would be delayed by the network latency. Client-side prediction solves this by predicting and rendering the results of the player's inputs without waiting for the server. This only affects the client's view; the server will still consider the client to be in the previous state until it receives the user command packet.
+
+When the client finally receives the snapshot from the server, it will compare its own state to the server's. A prediction error occurs if these states do not match. In such case, the client has to correct the error, since the server is the authority. To make the errors less noticeable, the prediction error smoothing is used to gradually move to the server's state.
+
+\paragraph{Lag Compensation}
+Due to variations in latency, clients don't always all have their states in-sync with each other and with the server. This results in consistencies between clients. A scenario may occur where an attacking player shoots a target player, but the attacker had higher latency. The target may have moved out of harm's way, but the attacker did not receive that update yet at the time of the shot being fired. Thus, to the attacker, it appears as though the target should be hit, but the server would not consider it a hit since it's the authority on the positions of players and the attacker's client was out of date.
+
+To solve this inconsistency, the server uses lag compensation. When a user command (such as a fired shot) is received, the server estimates at what time that command was created. It has to account for latency and interpolation on the client. Using a short history of player positions, the server simulates the positions of the players at the estimated time of the command's execution. It then uses these positions to process the input.
+
+The server will realise that at the time the attacker shot, the target was actually in line with the shot. Thus, it will register the hit. Afterwards, the simulation will revert players to their actual positions. This isn't perfect, since it results in anomalies such as the target being hit even though to them, they are already behind cover. Such consequences are generally unavoidable, but in practice, packet speeds are sufficiently quick to avoid these sorts of problems.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.66\linewidth]{images/source_net_lag_comp.jpg}
+  \caption{Lag compensation}
+  \label{fig:source_net_lag_comp}
+\end{figure}
+
+In \cref{fig:source_net_lag_comp}, 200 milliseconds of lag is being faked by the client. The red hitbox is the position on the client at the time of the shot. The blue hitbox is the server's position based its the estimated time of the shot. The two hitboxes don't perfectly line up due to precision errors in estimate the command's time. However, they are still close enough for the server to successfully register the shot as a hit.
+
+\paragraph{Networking Entities}
+Both logical and physical objects in the world are called \textit{entities}. There are client-only entities, sever-only entities, and entities which are on both sides. The engine is responsible for ensuring these entities remain in sync. It does this through snapshot packets, which were discussed earlier.
+
+Going into more detail, the engine has to detect changes in the server-side entity, serialise the changes, send that as a network packet, deserialise it on the client, and update the corresponding client-side entity.
+
+An entity is a class that inherits from \texttt{CBaseEntity}. Entities that need to be synchronised between the client and server are assigned indices which are tracked by an \textit{entity dictionary} to ensure the indices are consistent on both sides. Not all member variables of the entity class need to be sent over the network. The ones that should be networked are designated using \texttt{CNetworkVar} and other similar macros (there are variations for other data types).
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cpp}
+    CNetworkVar(int, m_iMyInt);
+    CNetworkVar(float, m_fMyFloat);
+    CNetworkVector(m_vecMyVector);
+    CNetworkQAngle(m_angMyAngle);
+    CNetworkArray(int, m_iMyArray, 64);
+    CNetworkHandle(CBaseEntity, m_hMyEntity);
+    CNetworkString(m_szMyString);
+  \end{minted}
+  \caption{Declared network variables}
+  \label{fig:source_net_var}
+\end{figure}
+
+Snapshot update packets are built from serialised network variables. Thus, entity classes must define how their networked variables are serialised and deserialised. This is done with \textit{data tables}. \textit{Send tables} are for serialisation and \textit{receive tables} are for deserialisation. Each network variable's serialisation or deserialisation information is stored in the data table as a \texttt{SendProp} or \texttt{RecvProp}, respectively.
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cpp}
+    IMPLEMENT_SERVERCLASS_ST(CMyClass, DT_MyClass)
+        SendPropInt(SENDINFO(m_iMyInt), 4, SPROP_UNSIGNED),
+        SendPropFloat(SENDINFO(m_fMyFloat), -1, SPROP_COORD),
+        SendPropVector(SENDINFO(m_vecMyVector), -1, SPROP_COORD),
+        SendPropQAngles(SENDINFO(m_angMyAngle), 13, SPROP_CHANGES_OFTEN),
+        SendPropArray3(
+            SENDINFO_ARRAY3(m_iMyArray),
+            SendPropInt(SENDINFO_ARRAY(m_iMyArray), 10, SPROP_UNSIGNED)
+        ),
+        SendPropEHandle(SENDINFO(m_hMyEntity)),
+        SendPropString(SENDINFO(m_szMyString)),
+    END_SEND_TABLE()
+  \end{minted}
+  \caption{Declared send table}
+  \label{fig:source_net_send_table}
+\end{figure}
+
 \subsubsection{Unity}
 
 \subsection{Platforms}
