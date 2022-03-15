@@ -277,17 +277,38 @@ In \cref{fig:source_vmt}, \texttt{LightmappedGeneric} is the material shader to 
 \begin{figure}[!htp]
   \centering
   \subfloat[\centering albedo and bump map]{
-    \includegraphics[width=0.45\linewidth]{images/source_texture.jpg}
+    \includegraphics[width=0.33\linewidth]{images/source_texture.jpg}
   }
   \qquad
   \subfloat[\centering in-game]{
-    \includegraphics[width=0.45\linewidth]{images/source_texture_game.jpg}
+    \includegraphics[width=0.33\linewidth]{images/source_texture_game.jpg}
   }
   \caption{The material's textures and in-game appearance}
   \label{fig:source_texture}
 \end{figure}
 
 \subsubsection{Unity}
+Unity has it's own share of proprietary formats, including but not limited to: animations, curves, gradients, masks, materials, and presets. Unlike Source, Unity uses standard formats for textures and models. It doesn't require models to be compiled, and can even support importing some proprietary model formats (though the \texttt{fbx} format is still preferred). Like Source, Unity supports WAV and MP3 for sounds. However, it additionally supports OGG, FLAC, and some other audio formats.
+
+When Unity assets are imported, the Unity Editor associates some metadata with them. This is used for better integration with the editor. Source doesn't have any notion of importing assets really; Source assets are just loose files or archives with a specific directory structure.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.75\linewidth]{images/unity_project_window.png}
+  \caption{Project window in Unity Editor displaying imported assets}
+  \label{fig:unity_project_window}
+\end{figure}
+
+Assets can also be bundled into packages which can be imported by other developers. These packages can be put (or sold) on the Unity Asset Store. The Asset Store is not just limited to textures, models, sounds, and even entire scenes. It can provide project templates, scripting tools, visual effects, and much more. This is a major difference from Source, which doesn't have any strong, centralised ecosystem around assets. Thus, a Unity developer is much less reliant on asset creation skills than a Source developer.
+
+Some of Unity's assets are more integrated into the Unity Editor, which makes a developer less reliant on external asset creation. For example, materials in Unity can be directly created in the editor, unlike Source, which requires editing a text file and typing in commands.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[scale=0.75]{images/unity_material.png}
+  \caption{Inspector in Unity Editor showing a material}
+  \label{fig:unity_material}
+\end{figure}
 
 \subsection{Physics}
 \subsubsection{Source}
