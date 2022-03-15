@@ -32,7 +32,7 @@ This section compares and contrasts various aspects of two different engines: So
 \subsubsection{Source}
 Programming is done in C++, typically using Visual Studio. However, other IDEs can also work. A level editor named \textit{Hammer} is included in the Source SDK. When not programming or making assets, this is tool that is being worked with the most. It is used to define the level's geometry, apply textures, light the level, place objects and entities, configure behaviour logic for entities, and much more.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/source_hammer.png}
   \caption{Hammer editing \textit{cs\_office} from CS:GO}
@@ -44,7 +44,7 @@ Some assets, including models and textures, are expected to be in Source-specifi
 
 There are also third-party tools frequently used by modders and level designers, such as VIDE, which can be used to create textures, view or create game content packages, edit particles, pack game content into map files, and much more.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/source_vide_pakfile.png}
   \caption{VIDE displaying the pakfile lump of a map}
@@ -53,7 +53,7 @@ There are also third-party tools frequently used by modders and level designers,
 \subsubsection{Unity}
 The primary development environment for Unity is the Unity Editor. This environment is quite integrated; the Source engine's environment looks dated and fragmented in comparison. Like Hammer, Unity Editor can define the geometry of a scene and apply textures to objects. But it could also do a lot more, like creating animations and materials, running the game within, inspecting a running game's state, designing UIs, creating visual effects, and profiling the game.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/unity_editor.png}
   \caption{Unity Editor}
@@ -75,7 +75,7 @@ The engine itself is written in C++ so naturally, programming a game with the So
 \paragraph{Scripts}
 The engine also supports external scripts using the VScript virtual machine and API. Depending on the version of the SDK, different languages are supported. VScript first shipped with support for the Squirrel language. However, Source Filmmaker uses Python and Portal 2 has limited Lua support.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -107,7 +107,7 @@ Besides directly programming in C++ and VScript, there is an I/O system by which
 
 For example, \cref{fig:source_entities} shows some of the entities used to control an elevator. The four stacked \texttt{logic\_relay}s control the doors for each of the four floors. The \texttt{logic\_compare} chooses the next path node for the elevator to travel to. The \texttt{logic\_relay} at the bottom right performs actions when the elevator needs to stop.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.75\linewidth]{images/source_io_entities.png}
   \caption{Logic entities for controlling an elevator}
@@ -116,7 +116,7 @@ For example, \cref{fig:source_entities} shows some of the entities used to contr
 
 The last \texttt{logic\_relay} is pictured in more detail in \cref{fig:source_elev_stop}. The purpose of a \texttt{logic\_relay} is to forward messages; it can turn one input into many outputs. Another entity can trigger the relay, which causes the relay to fire an \texttt{OnTrigger} event. \texttt{elev\_stop} is being triggered by the aforementioned \texttt{logic\_compare}. \texttt{elev\_stop} has four outputs that occur when the \texttt{OnTrigger} event is fired. Each output targets a different entity and sends it some input. The first stops the elevator, the second plays a bell sound, and the last two open doors.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \subfloat[\centering inputs]{
     \includegraphics[width=0.45\linewidth]{images/source_io_elev_stop_in.png}
@@ -132,7 +132,7 @@ The last \texttt{logic\_relay} is pictured in more detail in \cref{fig:source_el
 \paragraph{Events}
 There are many other events, such as one for the player getting hurt or a team winning a round. Data can be associated with an event, for example, which player got hurt or which team won. The \texttt{logic\_eventlistener} entity can be used to listen to events. In C++, \texttt{CGameEventListener::ListenForGameEvent} can be used. The \texttt{CGameEventManager} class can be used to interact with events, be it creating a new event, firing an event, or registering an event listener. Events are declared in various \texttt{.res} files in the \textit{resources} directory of the game. These get loaded using \texttt{CGameEventManager::LoadEventsFromFile}.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -160,7 +160,7 @@ The Unity engine is written in C++. For a fee, it is possible to license the eng
 \paragraph{Scripts}
 Scripts can be attached to game objects as components. This is similar to VScripts in the sense that VScripts can be attached to any entity. The inspector in Unity Editor will show all public fields of the script in the component's UI. There isn't an equivalent to this for VScripts. It's possible to access other scripts' public fields programmatically by getting the script components of other game objects.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[scale=0.75]{images/unity_script_inspector.png}
   \caption{Setting a script's public fields in the inspector}
@@ -169,7 +169,7 @@ Scripts can be attached to game objects as components. This is similar to VScrip
 
 Scripts have an \texttt{Update} function which is called every frame. This is similar to the ``think'' function that VScripts have. They also have a \texttt{Start} function which is called before frames start being updated, so it's useful for initialisation code. Neither function has to be used though. For example, it may be desirable to have a script that holds functions used to handle events. Such functions can be hooked up using the inspector.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -198,7 +198,7 @@ Custom events can be created using \texttt{UnityEvent} objects. If one is added 
 
 Alternatively, event listeners can be attached programmatically with \texttt{UnityEvent\-.AddListener}. Events can be invoked programmatically with \texttt{UnityEvent.Invoke}.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[scale=0.75]{images/unity_event_inspector.png}
   \caption{Attaching a function to a button's \texttt{onClick} event}
@@ -238,7 +238,7 @@ Preparing models for use with Source is a fairly involved process. First, a sour
   \item \texttt{phy} -- collision mesh
 \end{itemize}
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -261,7 +261,7 @@ Preparing models for use with Source is a fairly involved process. First, a sour
 \paragraph{Materials}
 \texttt{vmt} files define materials. Like \texttt{qc} files, they are plain-text files with a list of commands. Some set shader-specific properties, while others are shader-agnostic.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -280,7 +280,7 @@ Preparing models for use with Source is a fairly involved process. First, a sour
 
 In \cref{fig:source_vmt}, \texttt{LightmappedGeneric} is the material shader to use. \texttt{\$basetexture} is a path to an albedo texture. \texttt{\$surfaceprop} is a shader-agnostic property which determines the material's physical properties (sounds, hit effects, etc.). \texttt{\$bumpmap} is a path to a bump map texture, used for normal mapping.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \subfloat[\centering albedo and bump map]{
     \includegraphics[width=0.33\linewidth]{images/source_texture.jpg}
@@ -298,7 +298,7 @@ Unity has it's own share of proprietary formats, including but not limited to: a
 
 When Unity assets are imported, the Unity Editor associates some metadata with them. This is used for better integration with the editor. Source doesn't have any notion of importing assets really; Source assets are just loose files or archives with a specific directory structure.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.75\linewidth]{images/unity_project_window.png}
   \caption{Project window in Unity Editor displaying imported assets}
@@ -309,7 +309,7 @@ Assets can also be bundled into packages which can be imported by other develope
 
 Some of Unity's assets are more integrated into the Unity Editor, which makes a developer less reliant on external asset creation. For example, materials in Unity can be directly created in the editor, unlike Source, which requires editing a text file and typing in commands.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[scale=0.75]{images/unity_material.png}
   \caption{Inspector in Unity Editor showing a material}
@@ -323,7 +323,7 @@ The Source engine has two 3D physics simulation engines. One is \textit{QPhysics
 \paragraph{VPhysics}
 VPhysics does not use a model's mesh directly for physics simulation. Instead, it uses a collision model, which is typically loaded from the collision mesh of the entity's model. The collision meshes are simpler approximations of the model. Alternatively, collision models can be generated from bounding boxes, which are typically used to perform cheap collision tests.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[scale=0.25]{images/source_collision_mesh.png}
   \caption{An NPC's collision mesh}
@@ -332,7 +332,7 @@ VPhysics does not use a model's mesh directly for physics simulation. Instead, i
 
 VPhysics-enabled entities have their motion and behaviour influenced by the application of forces and constraints in the world. There are many pre-existing entities for physics which can be used by level designers in Hammer. For example, \texttt{phys\_pulleyconstraint} to simulate a pulley or a \texttt{phys\_hinge} to simulate a hinge. For props, \texttt{prop\_physics} can be used to place a VPhysics-enabled model in the world.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -355,7 +355,7 @@ Unity has a built-in 3D physics engine. Unlike Source, Unity also has a built-in
 
 Just like source, Unity's 3D physics engine makes use of a collision model to simulate collisions. In Unity, a Collider component has to be added to the game object. As with Source, Unity supports generating a collision model from a collision mesh using a Mesh Collider. Colliders are not only useful for automated physics simulation but also for manual collision checks, such as through \texttt{Physics.OverlapBox} or \texttt{Physics.CheckBox}.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/unity_colliders.png}
   \caption{Box Colliders of some objects}
@@ -364,7 +364,7 @@ Just like source, Unity's 3D physics engine makes use of a collision model to si
 
 To make an object subject to physical forces, a Rigidbody component has to be added to the object. Similar to Source, this takes over the movement of the game object. Thus, movement should be through the application of forces rather than modifying the object's transform.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -396,7 +396,7 @@ In \cref{fig:unity_wheels}, notice the use of \texttt{FixedUpdate} rather than \
 \subsubsection{Source}
 Source only has one rendering pipeline, and it isn't really documented anywhere. Given that Source is an older engine, its graphics capabilities are much more limited than Unity's. Some notable examples include Source's limited support for dynamic reflections, lighting, and shadows. Dynamic reflections are only supported for water typically, and other reflection are baked into the map using cubemaps. Dynamic lights are supported, but their implementation is buggy in some cases and the engine limits a map to a small number of dynamic light sources. Dynamic shadows, while also supported, come with even more caveats in Source (notably, only being cast by world models and only onto brushes).
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/source_env_projectedtexture.jpg}
   \caption{A dynamic light shining from a doorwa}
@@ -406,7 +406,7 @@ Source only has one rendering pipeline, and it isn't really documented anywhere.
 \paragraph{Radiosity Normal Mapping}
 The Source engine relies on light and shadow maps for global illumination. Light maps are generated using a first-party radiosity solver. Radiosity is nice because it allows low resolution light maps to be pre-generated and cost little during runtime while still managing to provide convincing global illumination. However, as a consequence of being low-resolution, the light maps fail to capture the high-frequency detail of surfaces. Thus, a significant innovation of Source's renderer was \textit{Radiosity Normal Mapping}. As the name suggests, it's a technique which combines radiosity with normal mapping. It effectively performs diffuse normal mapping in one rendering pass. Using bump maps which are of a higher resolution than the light maps, the finer surface detail can be captured with this technique.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/source_radiosity_normal_mapping_shade_tree.png}
   \caption{Radiosity normal mapping shade tree}
@@ -416,7 +416,7 @@ The Source engine relies on light and shadow maps for global illumination. Light
 \paragraph{HDRR}
 While not a new concept at the time of Source's release, high-dynamic-range rendering (HDRR) was fairly novel for video games. Source was not the first but was among the earlier engines to support this rendering technique. Valve first demoed this feature in the Fall of 2003. However, their first attempt had problems such as fog effects not working correctly. It took four attempts to arrive at an acceptable compromise for HDRR. This culminated with the release of \textit{Half-Life 2: Lost Coast} in Fall 2005, which in a way was a tech demo for Source's HDRR.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \subfloat[\centering LDRR]{
     \includegraphics[width=0.45\linewidth]{images/source_ldrr.png}
@@ -432,7 +432,7 @@ While not a new concept at the time of Source's release, high-dynamic-range rend
 \subsubsection{Unity}
 Unity has several rendering pipelines: the Built-in Render Pipeline, the Universal Render Pipeline, and the High Definition Render Pipeline. It's also possible to create a custom render pipeline. At a high level, the render pipeline performs culling, rendering, and post-processing operations to transform contents in a scene into an image displayed on a screen.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/unity_pipelines.png}
   \caption{Comparison of rendering pipelines in Unity}
@@ -441,7 +441,7 @@ Unity has several rendering pipelines: the Built-in Render Pipeline, the Univers
 
 Compared to the Built-in pipeline, HDRP supports many more shaders such as: additive, multiply, decals, hair, and fabric. It also supports GPU tessellation. It also has ray tracing features which are currently in preview. There are many more differences between rendering pipelines; too many to list here.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \subfloat[\centering off]{
     \includegraphics[width=0.45\linewidth]{images/unity_hdrp_ray_traced_gi_off.png}
@@ -458,7 +458,7 @@ In contrast to the Source engine, Unity's HDRP supports real-time ray tracing fo
 
 However, Unity's rendering pipelines are very flexible. This Unity \textit {also} supports light mapping and radiosity like Source (via the \textit{Enlighten} middleware), but also supports the use of a progressive path tracing algorithm for baking lighting. Unity also supports HDRR in all three pipelines. In fact, the built-in renderer also supports outputting to HDR displays, which Source cannot do.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.75\linewidth]{images/unity_hdrr.jpg}
   \caption{Scene using HDRR with tonemapping}
@@ -509,14 +509,14 @@ Behaviours are an abstraction of AI code. They can be re-used by many NPCs rathe
 \paragraph{Navigation}
 NPCs can navigate via a node graph or via a navigation mesh. Typically, the latter is used by ``bots'', though there is a more general-purpose \textit{NextBot} system in some of Valve's games which makes use of navigation meshes. However, it is not available in any public Source SDK release. A navigation mesh can be auto-generated and also manually edited in-game. In contrast, a node graph is generated from manually placed node entities within a map.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/source_node_graph.jpg}
   \caption{A node graph in the penultimate map of Half-Life 2: Episode One}
   \label{fig:source_node_graph}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/source_nav_mesh.png}
   \caption{Editing a navigation mesh in-game}
@@ -531,7 +531,7 @@ Unlike the Source engine, Unity has few AI features inherently. It has an AI mod
 
 Like with Source, navigation meshes can be automatically generated in Unity. These meshes are the primary way for all path finding, unlike Source which additionally has node graphs.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includesvg[inkscapelatex=false, width=0.75\linewidth]{images/unity_nav_loop.svg}
   \caption{Overview of pathfinding in Unity}
@@ -553,7 +553,7 @@ To conserve bandwidth, snapshots are sent at a rate of 20 per second by default.
 
 Packet loss can have a detrimental effect on interpolation. To solve this, the interpolation period is set to 100 milliseconds by default. This means that if the previous snapshot is lost, the one before it will still be within the period for interpolation. \cref{fig:source_net_interp} demonstrates this: even if the snapshot at tick 342 is lost, the snapshot at 340 is still within the interpolation period. This does effectively mean that the client's view is always behind by 100 ms, or whatever the configured period is.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/source_net_interp.png}
   \caption{Interpolation timeline with a period of 100 ms}
@@ -574,7 +574,7 @@ To solve this inconsistency, the server uses lag compensation. When a user comma
 
 The server will realise that at the time the attacker shot, the target was actually in line with the shot. Thus, it will register the hit. Afterwards, the simulation will revert players to their actual positions. This isn't perfect, since it results in anomalies such as the target being hit even though to them, they are already behind cover. Such consequences are generally unavoidable, but in practice, packet speeds are sufficiently quick to avoid these sorts of problems.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/source_net_lag_comp.jpg}
   \caption{Lag compensation}
@@ -590,7 +590,7 @@ Going into more detail, the engine has to detect changes in the server-side enti
 
 An entity is a class that inherits from \texttt{CBaseEntity}. Entities that need to be synchronised between the client and server are assigned indices which are tracked by an \textit{entity dictionary} to ensure the indices are consistent on both sides. Not all member variables of the entity class need to be sent over the network. The ones that should be networked are designated using \texttt{CNetworkVar} and other similar macros (there are variations for other data types).
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -610,7 +610,7 @@ An entity is a class that inherits from \texttt{CBaseEntity}. Entities that need
 
 Snapshot update packets are built from serialised network variables. Thus, entity classes must define how their networked variables are serialised and deserialised. This is done with \textit{data tables}. \textit{Send tables} are for serialisation and \textit{receive tables} are for deserialisation. Each network variable's serialisation or deserialisation information is stored in the data table as a \texttt{SendProp} or \texttt{RecvProp}, respectively.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \begin{minted}[
     linenos,
     autogobble=true,
@@ -636,7 +636,7 @@ Snapshot update packets are built from serialised network variables. Thus, entit
 \subsubsection{Unity}
 There are several networking APIs offered by Unity. First is the now deprecated UNet, which houses the high-level networking API (HLAPI) and the Transport Layer API. The latter is a lower-level API meant for more advanced multiplayer games. Unity is also working on a new multiplayer and networking solution named \textit{Netcode for GameObjects}. This is meant to replace UNet.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/unity_net_layers.png}
   \caption{Layers of the HLAPI}
@@ -647,7 +647,7 @@ Akin to network entities in Source, there is a Network Identity component that m
 
 Fields of scripts can be synchronised using \texttt{SyncVar} annotations. This is more similar to the macros used in Source to designate variables as networked. As with source, this kind of synchronisation is uni-directional; data is synchronised from the server to remote clients. To perform synchronisation in the opposite direction in Unity, commands have to be used. This is also similar to Source, which has the client send user command packets to the server.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=0.66\linewidth]{images/unity_net_actions.jpg}
   \caption{Directions of remote actions}
@@ -698,7 +698,7 @@ Unity supports many more platforms than the Source Engine. Source's console supp
   \item WebGL
 \end{itemize}
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\linewidth]{images/unity_platforms.png}
   \caption{Some of Unity's supported platforms}

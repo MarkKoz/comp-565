@@ -20,6 +20,18 @@
 \usepackage{graphicx}
 \usepackage{subfig}
 
+% Ensure floats are within the (sub)(sub)section they're defined.
+% https://tex.stackexchange.com/a/235312
+\usepackage{placeins}
+\let\Oldsection\section
+\renewcommand{\section}{\FloatBarrier\Oldsection}
+
+\let\Oldsubsection\subsection
+\renewcommand{\subsection}{\FloatBarrier\Oldsubsection}
+
+\let\Oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}{\FloatBarrier\Oldsubsubsection}
+
 \usepackage{hyperref}
 \hypersetup{bookmarksnumbered}
 \usepackage{bookmark}
