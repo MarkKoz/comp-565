@@ -312,6 +312,38 @@ Some of Unity's assets are more integrated into the Unity Editor, which makes a 
 
 \subsection{Physics}
 \subsubsection{Source}
+The Source engine has two 3D physics simulation engines. One is \textit{QPhysics}, which is an older and simpler simulator used for objects with simple collision boxes. It is also used for players, walking NPCs. The more sophisticated engine, \textit{VPhysics}, is not used for them because the simulations would be too complex to handle. VPhysics is based on physics middleware licensed by Havok. It simulates mass, gravity, friction, air resistance, inertia, and buoyancy.
+
+\paragraph{VPhysics}
+VPhysics does not use a model's mesh directly for physics simulation. Instead, it uses a collision model, which is typically loaded from the collision mesh of the entity's model. The collision meshes are simpler approximations of the model. Alternatively, collision models can be generated from bounding boxes, which are typically used to perform cheap collision tests.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[scale=0.25]{images/source_collision_mesh.png}
+  \caption{An NPC's collision mesh}
+  \label{fig:source_collision}
+\end{figure}
+
+VPhysics-enabled entities have their motion and behaviour influenced by the application of forces and constraints in the world. There are many pre-existing entities for physics which can be used by level designers in Hammer. For example, \texttt{phys\_pulleyconstraint} to simulate a pulley or a \texttt{phys\_hinge} to simulate a hinge. For props, \texttt{prop\_physics} can be used to place a VPhysics-enabled model in the world.
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cpp}
+    #define MODEL "models/props_c17/FurnitureDresser001a.mdl"
+
+    void CMyEnt::Spawn() {
+      PrecacheModel(MODEL);
+      SetModel(MODEL);
+      VPhysicsInitNormal(SOLID_VPHYSICS, 0, false);
+    }
+  \end{minted}
+  \caption{Programmatically creating a physically-simulated entity}
+  \label{fig:source_physics_ent}
+\end{figure}
+
 \subsubsection{Unity}
 
 \subsection{Graphics}
