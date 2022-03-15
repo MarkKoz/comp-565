@@ -5,6 +5,7 @@
 \usepackage[assign-num=3]{report}
 \usepackage[outputdir=./.temp/report]{minted}
 \usepackage{svg}
+\usepackage{wrapfig}
 
 \title{Comparison of Game Engines}
 
@@ -64,6 +65,11 @@ For scripting, Unity Editor allows scripts to be edited with virtually any text 
 
 \subsection{Programming}
 \subsubsection{Source}
+\begin{wrapfigure}{r}{0.15\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/source_entity_flow.png}
+\end{wrapfigure}
+
 The engine itself is written in C++ so naturally, programming a game with the Source engine is also done in C++. The full source code of the engine can be licensed. Valve also offers a portion of the engine's C++ code with the Source SDK. This is enough to make a game with the SDK, but it doesn't give access to the engine's internals such as its core networking code. The Source engine also comes with it's own Standard Template Library named \texttt{CUtl}, which is located within the \texttt{Tier1} library of the engine.
 
 \paragraph{Scripts}
