@@ -1,0 +1,5 @@
+--output html
+--dict doc/dict.txt
+--remove-macros texttt
+--ignore lt:en:OXFORD_SPELLING_Z_NOT_S,sh:capperiod,sh:figref
+--check en_UK doc/report.tex
