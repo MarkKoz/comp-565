@@ -70,7 +70,7 @@ For scripting, Unity Editor allows scripts to be edited with virtually any text 
   \includegraphics[width=\linewidth]{images/source_entity_flow.png}
 \end{wrapfigure}
 
-The engine itself is written in C++ so naturally, programming a game with the Source engine is also done in C++. The full source code of the engine can be licensed. Valve also offers a portion of the engine's C++ code with the Source SDK. This is enough to make a game with the SDK, but it doesn't give access to the engine's internals such as its core networking code. The Source engine also comes with it's own Standard Template Library named \texttt{CUtl}, which is located within the \texttt{Tier1} library of the engine.
+The engine itself is written in C++ so naturally, programming a game with the Source engine is also done in C++. The full source code of the engine can be licensed. Valve also offers a portion of the engine's C++ code with the Source SDK. This is enough to make a game with the SDK, but it doesn't give access to the engine's internals such as its core networking code. The Source engine also comes with its own Standard Template Library named \texttt{CUtl}, which is located within the \texttt{Tier1} library of the engine.
 
 \paragraph{Scripts}
 The engine also supports external scripts using the VScript virtual machine and API. Depending on the version of the SDK, different languages are supported. VScript first shipped with support for the Squirrel language. However, Source Filmmaker uses Python and Portal 2 has limited Lua support.
@@ -105,7 +105,7 @@ It is technically possible to add support for scripting with any language, witho
 \paragraph{I/O Entities}
 Besides directly programming in C++ and VScript, there is an I/O system by which entities communicate between each other. This system can be leveraged to program entities in Hammer. Effectively, an entity's event can be hooked so that an action is performed on another entity when the event occurs.
 
-For example, \cref{fig:source_entities} shows some of the entities used to control an elevator. The four stacked \texttt{logic\_relay}s control the doors for each of the four floors. The \texttt{logic\_compare} chooses the next path node for the elevator to travel to. The \texttt{logic\_relay} at the bottom right performs actions when the elevator needs to stop.
+For example, \cref{fig:source_entities} shows some entities used to control an elevator. The four stacked \texttt{logic\_relay}s control the doors for each of the four floors. The \texttt{logic\_compare} chooses the next path node for the elevator to travel to. The \texttt{logic\_relay} at the bottom right performs actions when the elevator needs to stop.
 
 \begin{figure}[!htb]
   \centering
@@ -192,9 +192,9 @@ Scripts have an \texttt{Update} function which is called every frame. This is si
 \end{figure}
 
 \paragraph{Events}
-Some events have already been discussed, such as \texttt{Start} and \texttt{Update}. There are many other built-in events, such as UI events (e.g. clicking a button) and physics events (e.g. collision detection).
+Some events have already been discussed, such as \texttt{Start} and \texttt{Update}. There are many other built-in events, such as UI events (e.g.\ clicking a button) and physics events (e.g.\ collision detection).
 
-Custom events can be created using \texttt{UnityEvent} objects. If one is added as a public field of a script, it's possible to add a callback along with an argument for the event via the inspector. This is similar to the outputs menu in Hammer, but with a nicer interface; the editor displays a different UI component depending on the data type of the argument. For example, in \cref{fig:unity_event_inspector}, the argument is represented by a check box since it is a \texttt{bool}.
+Custom events can be created using \texttt{UnityEvent} objects. If one is added as a public field of a script, it's possible to add a callback along with an argument for the event via the inspector. This is similar to the outputs menu in Hammer, but with a nicer interface; the editor displays a different UI component depending on the data type of the argument. For example, in \cref{fig:unity_event_inspector}, the argument is represented by a checkbox since it is a \texttt{bool}.
 
 Alternatively, event listeners can be attached programmatically with \texttt{UnityEvent\-.AddListener}. Events can be invoked programmatically with \texttt{UnityEvent.Invoke}.
 
@@ -211,7 +211,7 @@ There is also a general-purpose messaging system, which can be used to send cust
 \subsubsection{Source}
 There is a \texttt{game\_ui} entity that can be used in Hammer to receive events about a limited set of keyboard, mouse, and gamepad inputs. Ignoring the gamepad, it is limited to the basic movement controllers and left/right clicks of the mouse. As with all entities, a VScript can be attached to it to get access to these inputs and perform more complex operations with them.
 
-In C++, it player inputs can be accessed via some member variables of the \texttt{CBasePlayer} entity. The inputs are stored as bit fields. The supported input constants are defined in \href{https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/game/shared/in_buttons.h}{\texttt{in\_buttons.h}}.
+In C++, player inputs can be accessed via some member variables of the \texttt{CBasePlayer} entity. The inputs are stored as bit fields. The supported input constants are defined in \href{https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/game/shared/in_buttons.h}{\texttt{in\_buttons.h}}.
 
 \begin{itemize}
   \item \texttt{m\_nButtons} -- the buttons currently being pressed; includes forced buttons and excludes disabled buttons
@@ -222,7 +222,7 @@ In C++, it player inputs can be accessed via some member variables of the \textt
   \item \texttt{m\_afButtonForced} -- the buttons that are forcefully held by the game
 \end{itemize}
 
-Unfortunately, in typical Source fashion, there is a lack of documentation (especially official documentation) on the input system. The C++ interface described above does not seem to cover analogue inputs from gamepads. There is a \texttt{CInput} class which seems to be the central place where inputs are handled by the engine. This does have functions for retrieving analogue inputs and getting the mouse position. However, it's unclear which entities hold references to this class and whether its intended to be the primary way for developers to get user input. Thus, how gamepad inputs are programmatically access cannot be discussed.
+Unfortunately, in typical Source fashion, there is a lack of documentation (especially official documentation) on the input system. The C++ interface described above does not seem to cover analogue inputs from gamepads. There is a \texttt{CInput} class which seems to be the central place where inputs are handled by the engine. This does have functions for retrieving analogue inputs and getting the mouse position. However, it's unclear which entities hold references to this class and whether it's intended to be the primary way for developers to get user input. Thus, how gamepad inputs are programmatically access cannot be discussed.
 
 \begin{figure}[!htb]
   \begin{minted}[
@@ -352,7 +352,7 @@ In \cref{fig:source_vmt}, \texttt{LightmappedGeneric} is the material shader to 
 \end{figure}
 
 \subsubsection{Unity}
-Unity has it's own share of proprietary formats, including but not limited to: animations, curves, gradients, masks, materials, and presets. Unlike Source, Unity uses standard formats for textures and models. It doesn't require models to be compiled, and can even support importing some proprietary model formats (though the \texttt{fbx} format is still preferred). Like Source, Unity supports WAV and MP3 for sounds. However, it additionally supports OGG, FLAC, and some other audio formats.
+Unity has its own share of proprietary formats, including but not limited to: animations, curves, gradients, masks, materials, and presets. Unlike Source, Unity uses standard formats for textures and models. It doesn't require models to be compiled, and can even support importing some proprietary model formats (though the \texttt{fbx} format is still preferred). Like Source, Unity supports WAV and MP3 for sounds. However, it additionally supports OGG, FLAC, and some other audio formats.
 
 When Unity assets are imported, the Unity Editor associates some metadata with them. This is used for better integration with the editor. Source doesn't have any notion of importing assets really; Source assets are just loose files or archives with a specific directory structure.
 
@@ -452,7 +452,7 @@ In \cref{fig:unity_wheels}, notice the use of \texttt{FixedUpdate} rather than \
 
 \subsection{Graphics}
 \subsubsection{Source}
-Source only has one rendering pipeline, and it isn't really documented anywhere. Given that Source is an older engine, its graphics capabilities are much more limited than Unity's. Some notable examples include Source's limited support for dynamic reflections, lighting, and shadows. Dynamic reflections are only supported for water typically, and other reflection are baked into the map using cubemaps. Dynamic lights are supported, but their implementation is buggy in some cases and the engine limits a map to a small number of dynamic light sources. Dynamic shadows, while also supported, come with even more caveats in Source (notably, only being cast by world models and only onto brushes).
+Source only has one rendering pipeline, and it isn't really documented anywhere. Given that Source is an older engine, its graphics capabilities are much more limited than Unity's. Some notable examples include Source's limited support for dynamic reflections, lighting, and shadows. Dynamic reflections are only supported for water typically, and other reflection are baked into the map using cubemaps. Dynamic lights are supported, but their implementation is buggy in some cases and the engine limits a map to a few dynamic light sources. Dynamic shadows, while also supported, come with even more caveats in Source (notably, only being cast by world models and only onto brushes).
 
 \begin{figure}[!htb]
   \centering
@@ -600,7 +600,7 @@ Like with Source, navigation meshes can be automatically generated in Unity. The
 \subsubsection{Source}
 Source uses a client-server architecture. The server is typically the authoritative source about the simulation of the world/physics, game rules, and input processing. A client and server communicate with each other using UDP packets. The server sends the world state to clients, and clients base their video and audio outputs on this received state. Clients receive inputs from players and send that data to the server for processing.
 
-The game is simulate by the server in discrete units of time called \textit{ticks}. For each tick, the server processes inputs, runs a step of the physics simulation, checks game rules, and updates object states. By default, the tick rate is $66.\bar6$ ticks per second. This can be increased to make the simulation more precise, but at the cost on increase CPU and bandwidth usage.
+The game is simulated by the server in discrete units of time called \textit{ticks}. For each tick, the server processes inputs, runs a step of the physics simulation, checks game rules, and updates object states. By default, the tick rate is $66.\bar6$ ticks per second. This can be increased to make the simulation more precise, but at the cost on increase CPU and bandwidth usage.
 
 After simulation, the server determines if there are clients in need of a world update, and if so, it generates a snapshot of the current state to later send to the clients. These snapshots are used instead of sending a new update packet to each client for every change. The server employs \textit{delta compression} for these snapshots to avoid sending redundant information. The idea is to only send a snapshot including the states that actually changed. To achieve this, the client must acknowledge the updates it receives. The server generates the delta snapshot based on the updates that have occurred since the last acknowledged update by the client. In cases of packet loss, full snapshots may be sent to clients to help them recover.
 
@@ -639,7 +639,7 @@ The server will realise that at the time the attacker shot, the target was actua
   \label{fig:source_net_lag_comp}
 \end{figure}
 
-In \cref{fig:source_net_lag_comp}, 200 milliseconds of lag is being faked by the client. The red hitbox is the position on the client at the time of the shot. The blue hitbox is the server's position based its the estimated time of the shot. The two hitboxes don't perfectly line up due to precision errors in estimate the command's time. However, they are still close enough for the server to successfully register the shot as a hit.
+In \cref{fig:source_net_lag_comp}, 200 milliseconds of lag is being faked by the client. The red hitbox is the position on the client at the time of the shot. The blue hitbox is the server's position based the estimated time of the shot. The two hitboxes don't perfectly line up due to precision errors in estimate the command's time. However, they are still close enough for the server to successfully register the shot as a hit.
 
 \paragraph{Networking Entities}
 Both logical and physical objects in the world are called \textit{entities}. There are client-only entities, sever-only entities, and entities which are on both sides. The engine is responsible for ensuring these entities remain in sync. It does this through snapshot packets, which were discussed earlier.
