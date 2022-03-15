@@ -209,6 +209,36 @@ There is also a general-purpose messaging system, which can be used to send cust
 
 \subsection{Input}
 \subsubsection{Source}
+There is a \texttt{game\_ui} entity that can be used in Hammer to receive events about a limited set of keyboard, mouse, and gamepad inputs. Ignoring the gamepad, it is limited to the basic movement controllers and left/right clicks of the mouse. As with all entities, a VScript can be attached to it to get access to these inputs and perform more complex operations with them.
+
+In C++, it player inputs can be accessed via some member variables of the \texttt{CBasePlayer} entity. The inputs are stored as bit fields. The supported input constants are defined in \href{https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/game/shared/in_buttons.h}{\texttt{in\_buttons.h}}.
+
+\begin{itemize}
+  \item \texttt{m\_nButtons} -- the buttons currently being pressed; includes forced buttons and excludes disabled buttons
+  \item \texttt{m\_afButtonPressed} -- the buttons that have just become pressed
+  \item \texttt{m\_afButtonReleased} -- the buttons that have just become released
+  \item \texttt{m\_afButtonLast} -- the value of \texttt{m\_nButtons} in the previous frame
+  \item \texttt{m\_afButtonDisabled} -- the buttons that are being ignored
+  \item \texttt{m\_afButtonForced} -- the buttons that are forcefully held by the game
+\end{itemize}
+
+\begin{figure}[!htb]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cpp}
+    if (pPlayer->m_nButtons & IN_ATTACK2) {
+      if (m_fNextZoom <= gpGlobals->curtime) {
+        Zoom();
+        pPlayer->m_nButtons &= ~IN_ATTACK2;
+      }
+    }
+  \end{minted}
+  \caption{Zooming in a sniper rifle when the secondary attack button is pressed}
+  \label{fig:source_sniper_zoom}
+\end{figure}
+
 \subsubsection{Unity}
 
 \subsection{Assets}
