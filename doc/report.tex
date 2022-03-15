@@ -222,6 +222,8 @@ In C++, it player inputs can be accessed via some member variables of the \textt
   \item \texttt{m\_afButtonForced} -- the buttons that are forcefully held by the game
 \end{itemize}
 
+Unfortunately, in typical Source fashion, there is a lack of documentation (especially official documentation) on the input system. The C++ interface described above does not seem to cover analogue inputs from gamepads. There is a \texttt{CInput} class which seems to be the central place where inputs are handled by the engine. This does have functions for retrieving analogue inputs and getting the mouse position. However, it's unclear which entities hold references to this class and whether its intended to be the primary way for developers to get user input. Thus, how gamepad inputs are programmatically access cannot be discussed.
+
 \begin{figure}[!htb]
   \begin{minted}[
     linenos,
@@ -240,6 +242,32 @@ In C++, it player inputs can be accessed via some member variables of the \textt
 \end{figure}
 
 \subsubsection{Unity}
+Like Source, Unity supports mouse, keyboard, and gamepad inputs. The input system defines three types of controls: key (for keyboards), button (for gamepads, joysticks, etc.), and virtual axis. A virtual axis is a generic control which has a value in the range of $[-1,1]$. It can be mapped to a button or key. A joystick may set this to some floating point value, but a keyboard button may just alternate between the binary 0 and 1.
+
+\begin{figure}[!htb]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cs}
+    void Update()
+    {
+        // Get the mouse delta. This is not in the range -1...1
+        float h = horizontalSpeed * Input.GetAxis("Mouse X");
+        float v = verticalSpeed * Input.GetAxis("Mouse Y");
+
+        transform.Rotate(v, h, 0);
+    }
+  \end{minted}
+  \caption{Rotating an object based on mouse's horizontal and vertical movement}
+  \label{fig:unity_input}
+\end{figure}
+
+Unity does not use bit fields to retrieve input values. Instead, the inputs can be queried by name. For example, \texttt{Input.GetKey("x")} is used to retrieve the state of the \textit{x} key of a keyboard. Alternatively, a \texttt{KeyCode} enum may be used. There are many other useful methods in the input system, such as \texttt{Input.GetKeyUp} which is analogous to Source's \texttt{m\_afButtonPressed} and \texttt{Input.GetKeyDown} for \texttt{m\_afButtonReleased}.
+
+Unlike Source, Unity makes a distinction between mouse and keyboard inputs, having separate functions like \texttt{Input.GetMouseButtonDown}. The mouse position can be retrieved from \texttt{Input.mousePosition}.
+
+Unlike Source, Unity also has support for touch controls and inputs from other sensors such as a compass, accelerometer, and gyroscope.
 
 \subsection{Assets}
 \subsubsection{Source}
