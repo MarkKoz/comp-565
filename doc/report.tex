@@ -363,30 +363,30 @@ When Unity assets are imported, the Unity Editor associates some metadata with t
   \label{fig:unity_project_window}
 \end{figure}
 
+\begin{wrapfigure}{r}{0.27\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/unity_material.png}
+  % \caption{Inspector in Unity Editor showing a material}
+  \label{fig:unity_material}
+\end{wrapfigure}
+
 Assets can also be bundled into packages which can be imported by other developers. These packages can be put (or sold) on the Unity Asset Store. The Asset Store is not just limited to textures, models, sounds, and even entire scenes. It can provide project templates, scripting tools, visual effects, and much more. This is a major difference from Source, which doesn't have any strong, centralised ecosystem around assets. Thus, a Unity developer is much less reliant on asset creation skills than a Source developer.
 
 Some of Unity's assets are more integrated into the Unity Editor, which makes a developer less reliant on external asset creation. For example, materials in Unity can be directly created in the editor, unlike Source, which requires editing a text file and typing in commands.
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[scale=0.75]{images/unity_material.png}
-  \caption{Inspector in Unity Editor showing a material}
-  \label{fig:unity_material}
-\end{figure}
 
 \subsection{Physics}
 \subsubsection{Source}
 The Source engine has two 3D physics simulation engines. One is \textit{QPhysics}, which is an older and simpler simulator used for objects with simple collision boxes. It is also used for players, walking NPCs. The more sophisticated engine, \textit{VPhysics}, is not used for them because the simulations would be too complex to handle. VPhysics is based on physics middleware licensed by Havok. It simulates mass, gravity, friction, air resistance, inertia, and buoyancy.
 
 \paragraph{VPhysics}
-VPhysics does not use a model's mesh directly for physics simulation. Instead, it uses a collision model, which is typically loaded from the collision mesh of the entity's model. The collision meshes are simpler approximations of the model. Alternatively, collision models can be generated from bounding boxes, which are typically used to perform cheap collision tests.
-
-\begin{figure}[!htb]
+\begin{wrapfigure}{r}{0.3\linewidth}
   \centering
-  \includegraphics[scale=0.25]{images/source_collision_mesh.png}
+  \includegraphics[width=\linewidth]{images/source_collision_mesh.png}
   \caption{An NPC's collision mesh}
   \label{fig:source_collision}
-\end{figure}
+\end{wrapfigure}
+
+VPhysics does not use a model's mesh directly for physics simulation. Instead, it uses a collision model, which is typically loaded from the collision mesh of the entity's model. The collision meshes are simpler approximations of the model. Alternatively, collision models can be generated from bounding boxes, which are typically used to perform cheap collision tests.
 
 VPhysics-enabled entities have their motion and behaviour influenced by the application of forces and constraints in the world. There are many pre-existing entities for physics which can be used by level designers in Hammer. For example, \texttt{phys\_pulleyconstraint} to simulate a pulley or a \texttt{phys\_hinge} to simulate a hinge. For props, \texttt{prop\_physics} can be used to place a VPhysics-enabled model in the world.
 
