@@ -345,6 +345,46 @@ VPhysics-enabled entities have their motion and behaviour influenced by the appl
 \end{figure}
 
 \subsubsection{Unity}
+Unity has a built-in 3D physics engine. Unlike Source, Unity also has a built-in 2D physics engine. For projects using Unity's Data-Oriented Technology Stack, different physics packages must be used: Unity Physics or Havok Physics for Unity (recall Source's physics is based on Havok).
+
+Just like source, Unity's 3D physics engine makes use of a collision model to simulate collisions. In Unity, a Collider component has to be added to the game object. As with Source, Unity supports generating a collision model from a collision mesh using a Mesh Collider. Colliders are not only useful for automated physics simulation but also for manual collision checks, such as through \texttt{Physics.OverlapBox} or \texttt{Physics.CheckBox}.
+
+\begin{figure}[!htp]
+  \centering
+  \includegraphics[width=0.66\linewidth]{images/unity_colliders.png}
+  \caption{Box Colliders of some objects}
+  \label{fig:unity_colliders}
+\end{figure}
+
+To make an object subject to physical forces, a Rigidbody component has to be added to the object. Similar to Source, this takes over the movement of the game object. Thus, movement should be through the application of forces rather than modifying the object's transform.
+
+\begin{figure}[!htp]
+  \begin{minted}[
+    linenos,
+    autogobble=true,
+    fontsize=\fontsize{10}{10},
+  ]{cs}
+    public void FixedUpdate() {
+        float motor = maxMotorTorque * Input.GetAxis("Vertical");
+        float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
+
+        foreach (AxleInfo axleInfo in axleInfos) {
+            if (axleInfo.steering) {
+                axleInfo.leftWheel.steerAngle = steering;
+                axleInfo.rightWheel.steerAngle = steering;
+            }
+            if (axleInfo.motor) {
+                axleInfo.leftWheel.motorTorque = motor;
+                axleInfo.rightWheel.motorTorque = motor;
+            }
+        }
+    }
+  \end{minted}
+  \caption{Controlling a ``car'' object with Wheel Colliders}
+  \label{fig:unity_wheels}
+\end{figure}
+
+In \cref{fig:unity_wheels}, notice the use of \texttt{FixedUpdate} rather than \texttt{Update}. The former is used for physics calculations because it is frame-independent and instead relies on the configured frequency of the physics system.
 
 \subsection{Graphics}
 \subsubsection{Source}
