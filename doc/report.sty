@@ -1,0 +1,66 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{report}
+
+% Requirements
+\RequirePackage{xkeyval}
+
+% Options
+\newcommand{\assignnum}{}
+
+\DeclareOptionX{assign-num}{\renewcommand{\assignnum}{#1}}
+\DeclareOptionX*{\PackageWarning{report}{`\CurrentOption' ignored}}
+\ProcessOptionsX
+
+% Preamble
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+
+\usepackage{graphicx}
+\usepackage{subfig}
+
+% Ensure floats are within the (sub)(sub)section they're defined.
+% https://tex.stackexchange.com/a/235312
+\usepackage{placeins}
+\let\Oldsection\section
+\renewcommand{\section}{\FloatBarrier\Oldsection}
+
+\let\Oldsubsection\subsection
+\renewcommand{\subsection}{\FloatBarrier\Oldsubsection}
+
+\let\Oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}{\FloatBarrier\Oldsubsubsection}
+
+\usepackage{hyperref}
+\hypersetup{bookmarksnumbered}
+\usepackage{bookmark}
+\usepackage{cleveref}
+
+% Hyphenate texttt.
+% https://tex.stackexchange.com/a/204420
+\makeatletter
+\input{t1lmtt.fd}
+\@namedef{T1+lmtt}{}
+\makeatother
+
+% Remove space reserved for unused fields.
+% https://tex.stackexchange.com/a/134857
+\makeatletter
+\renewcommand{\@maketitle}{\null\vskip 2em
+\begin{center}
+  \ifx\@subject\@empty \else
+    {\subject@font \@subject \par}
+    \vskip 1.5em
+  \fi
+  \titlefont\huge \@title\par
+  \vskip .5em
+  {\ifx\@subtitle\@empty\else\usekomafont{subtitle}\@subtitle\par\fi}%
+\end{center}
+\vskip 2em}
+\makeatother
+
+\subject{COMP 565 - Advanced Computer Graphics}
+\subtitle{Assignment \assignnum}
+\date{}
+\author{}

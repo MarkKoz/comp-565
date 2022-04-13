@@ -1,44 +1,73 @@
+% !TEX options = --shell-escape
+
 \documentclass[a4paper, 12pt]{scrartcl}
-\usepackage{lmodern}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{microtype}
-
-\usepackage{hyperref}
-\hypersetup{bookmarksnumbered}
-\usepackage{bookmark}
-
-% Hyphenate texttt.
-% https://tex.stackexchange.com/a/204420
-\makeatletter
-\input{t1lmtt.fd}
-\@namedef{T1+lmtt}{}
-\makeatother
-
-% Remove space reserved for unused fields.
-% https://tex.stackexchange.com/a/134857
-\makeatletter
-\renewcommand{\@maketitle}{\null\vskip 2em
-\begin{center}
-  \ifx\@subject\@empty \else
-    {\subject@font \@subject \par}
-    \vskip 1.5em
-  \fi
-  \titlefont\huge \@title\par
-  \vskip .5em
-  {\ifx\@subtitle\@empty\else\usekomafont{subtitle}\@subtitle\par\fi}%
-\end{center}
-\vskip 2em}
-\makeatother
+\usepackage[assign-num=4]{report}
+\usepackage{svg}
+\usepackage{wrapfig}
 
 \title{Unity -- Light Types Overview}
-\subject{COMP 565 - Advanced Computer Graphics}
-\subtitle{Assignment 4}
-\date{}
-\author{}
 
 \begin{document}
 
 \maketitle
+
+\section{Light Types}
+\subsection{Point Light}
+A point light emits light evenly in all directions from a specific point. As light travels from the point, it falls off based on the configured range. It's appropriate for use with light sources like lamps and candles, but can also be effective in lighting surroundings during an explosion.
+
+\begin{figure}[!htb]
+  \centering
+  \includesvg[inkscapelatex=false, width=0.5\linewidth]{images/point_light.svg}
+  \label{fig:point_light}
+\end{figure}
+
+\subsection{Spot Light}
+A spot light emits light within a range at a specific angle. It's appropriate for use with artificial light sources (e.g.\ flashlights, searchlights, and headlights) because these kinds of light sources tend to emit light in only one direction. A spot light's emitted light can be represented as a cone. The angle controls how wide the cone is (the radius of its base) while the range controls how far out the cone extends.
+
+\begin{figure}[!htb]
+  \centering
+  \includesvg[inkscapelatex=false, width=0.5\linewidth]{images/spot_light.svg}
+  \label{fig:spot_light}
+\end{figure}
+
+\subsection{Directional Light}
+A directional light emits light evenly across the entire scene. The light is directional like a spot light; the rotation of the light can be used to control where shadows are cast. However, unlike a spot light, a directional light doesn't have a limited range or a ``cone'' of light; the light does not fall off. Furthermore, despite being directional, there is no source for the light, meaning its position in the scene does not matter.
+
+A directional light is appropriate for sunlight, moonlight, or other distant light sources. In fact, it is integrated with Unity's procedural sky system to indicate the direction of the sun.
+
+\begin{figure}[!htb]
+  \centering
+  \includesvg[inkscapelatex=false, width=0.33\linewidth]{images/directional_light.svg}
+  \label{fig:directional_light}
+\end{figure}
+
+\subsection{Area Light}
+An area light takes the shape of a rectangle or disc. It emits lights from one side of that shape evenly across all directions of the shape's surface. It's appropriate for smaller light sources such as street lights or interior lights.
+
+The size of the shape can be controlled in the inspector via the width and height or radius fields. Light falls off as it gets further from the area light, as defined by its range field. This computation is expensive, so an area light is limited to being baked only.
+
+\begin{figure}[!htb]
+  \centering
+  \includesvg[inkscapelatex=false, width=0.75\linewidth]{images/area_light.svg}
+  \label{fig:area_light}
+\end{figure}
+
+\subsection{Emissive Material}
+An emissive material emits light across a surface area. Being a material, it can be applied to any shape. Some examples of good uses include fluorescent tubes, neon signs, and glow sticks. It can also be used to cheaply simulate smaller details such as the flame of a candle. More generally, it's a good way to add some subtle ambiance to a scene, even if it doesn't necessarily make physical sense.
+
+The light emitted by the material does fall off, but there is no way to specify the range. It can have its colour and intensity modified during runtime. The material can be either baked or realtime. However, it will only affect static geometry unless light probes are used.
+
+\subsection{Ambient Light}
+Ambient light is light that isn't coming from any particular light source; it's light that is affecting the entire scene. Ambient light ties into the skybox, which is the material that appears behind everything in the scene (i.e.\ the sky). The colour of the ambient light can be derived from the skybox or have custom colours. There is also a setting to change the colour of realtime shadows.
+
+It's useful to change the look and brightness of a scene without actually modifying, adding, or removing any light sources. For example, the colour and skybox materials can easily be changed to simulate another planet and its atmosphere. It can be used to simulate a climate or certain weather conditions.
+
+\section{Scene}
+
+Each light type is demonstrated in a separated scene, but all scenes follow the same basic template. The scenes use a room prefab which is a modified version of a medieval room scene from the asset store. This was selected no for stylistic reasons but rather for the practical reasons of being free and simple. The scene just needed to have some objects off which to bounce light and cast shadows.
+
+The confined space is particularly helpful in demonstrating point lights and emissive materials without being affected too much by ambient lighting. However, the ceiling was selectively removed for the ambient and directional light scenes to better demonstrate the effects these lights have. The room would otherwise be completely sealed off, blocking out any light from the outside.
+
+The scene also includes some post-processing effects as recommended by the original scene from the asset store. Its fog settings are also used across all scenes, albeit with a lower intensity.
 
 \end{document}

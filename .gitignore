@@ -70,4 +70,6 @@ crashlytics-build.properties
 
 # Documentation
 doc/.temp/
+doc/svg-inkscape/
 doc/*.pdf
+report.html
